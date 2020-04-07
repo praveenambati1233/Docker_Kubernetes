@@ -1,7 +1,7 @@
 
 
 
-* [10 Days of Statistics](#10-days-of-statistics)
+* [YAML](#YAML)
 
 `docker run` command is used to run a container from an image.
 
@@ -70,4 +70,4 @@ Run it in detached mode.
 
 ------------
 
-# 10 Days of Statistics
+# YAML
