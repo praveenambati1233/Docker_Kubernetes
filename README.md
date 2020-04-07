@@ -1,7 +1,7 @@
 
 
 
-* [YAML](#YAML)
+ [YAML Examples](#YAML)
 
 `docker run` command is used to run a container from an image.
 
