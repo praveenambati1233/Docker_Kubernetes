@@ -1,5 +1,8 @@
 
 
+
+* [10 Days of Statistics](#10-days-of-statistics)
+
 `docker run` command is used to run a container from an image.
 
 `docker ps `  list containers 
@@ -18,6 +21,8 @@
 
 
 `docker run -it image-name` Run in intractive mode and detached 
+
+`docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
 
 
 ------------
@@ -55,12 +60,14 @@ Set the database password to use db_pass123. Lookup the mysql image on Docker Hu
 
 >$ docker run -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db  mysql
 
+------------
 
+Run an instance of the ubuntu image to run the sleep 1000 command at startup
+Run it in detached mode.
+
+> docker run -d ubuntu sleep 1000
 
 
 ------------
 
-
-
-
-
+# 10 Days of Statistics
