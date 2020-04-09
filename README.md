@@ -92,7 +92,7 @@ Run it in detached mode.
 
 https://www.youtube.com/watch?v=KLOdisHW8rQ
 
-> Use build stage builds 
+> Use multi stage builds 
 https://docs.docker.com/develop/develop-images/multistage-build/
 
 > Speed up your build with this optimized Dockerfile  https://www.youtube.com/watch?v=oZ9nyCWERYc
