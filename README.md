@@ -2,6 +2,8 @@
 
 
  [YAML Examples](#YAML)
+ 
+ [Optimize Docker Files](#Optimize Docker Files)
 
 `docker run` command is used to run a container from an image.
 
@@ -71,3 +73,21 @@ Run it in detached mode.
 ------------
 
 # YAML
+
+
+
+
+
+------------
+
+
+
+# Optimize Docker Files
+
+https://www.youtube.com/watch?v=KLOdisHW8rQ
+
+> Use build stage builds 
+https://docs.docker.com/develop/develop-images/multistage-build/
+
+> Speed up your build with this optimized Dockerfile  https://www.youtube.com/watch?v=oZ9nyCWERYc
+
