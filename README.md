@@ -1,9 +1,9 @@
 
 
 
- [YAML Examples](#YAML)
- 
- [Optimize Docker Files](#Optimize Docker Files)
+[YAML Examples](#YAML)
+
+[Optimize Docker Files](#Optimize Docker Files)
 
 `docker run` command is used to run a container from an image.
 
