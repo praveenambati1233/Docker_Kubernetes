@@ -91,9 +91,15 @@ Run it in detached mode.
 # Optimize Docker Files
 
 https://www.youtube.com/watch?v=KLOdisHW8rQ
+https://www.youtube.com/watch?v=T4Df5_cojAs&t=373s
 
 > Use multi stage builds 
 https://docs.docker.com/develop/develop-images/multistage-build/
 
 > Speed up your build with this optimized Dockerfile  https://www.youtube.com/watch?v=oZ9nyCWERYc
 
+
+
+K8s 
+
+https://www.youtube.com/watch?v=Qzy6nmk0eI8&t=106s
