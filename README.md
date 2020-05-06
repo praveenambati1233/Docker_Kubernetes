@@ -186,15 +186,12 @@ redis           1/1     Running   0          100s
 
 K8s Commands :
 
-Remove pod 
+create pod `kubectl apply -f fileName.yml` 
 
-`kubectl delete pod <pod-name>`
+Remove pod  `kubectl delete pod <pod-name>`
 
-get pods
+get pods `kubectl get pods`
 
-`kubectl get pods`
+get nodes `kubectl get nodes`
 
-get nodes
-
-`kubectl get nodes`
 
