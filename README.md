@@ -108,11 +108,11 @@ https://www.youtube.com/watch?v=Qzy6nmk0eI8&t=106s
 
 # Creating pod using YAML
 
-K8s uses YAML files as inputs for the creation of PODs, Replica sets, deployment, services , volums etc
+> K8s uses YAML files as inputs for the creation of PODs, Replica sets, deployment, services , volums etc.
 
-Best sutiable softwares for Yaml creation :
-IDE : pycharm with k8s plugin
-validation : http://www.yamllint.com/ 
+**Best sutiable softwares for Yaml creation**
+- IDE : pycharm with k8s plugin
+- Validation : http://www.yamllint.com/ 
 
 Structure as follows ( Mandatory fields for every yaml file)
 ```yaml
