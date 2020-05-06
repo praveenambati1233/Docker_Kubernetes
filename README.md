@@ -7,6 +7,7 @@
 | ------------ | ------------ |
 |  1  |  [YAML Examples](#YAML) |
 |  2  |  [Optimize Docker Files](#Optimize-Docker-Files)  |
+| 3 | [Creating pod using YAML](#Creating-pod-using-YAML) |
 
 
 
@@ -103,3 +104,97 @@ https://docs.docker.com/develop/develop-images/multistage-build/
 K8s 
 
 https://www.youtube.com/watch?v=Qzy6nmk0eI8&t=106s
+
+
+# Creating pod using YAML
+
+K8s uses YAML files as inputs for the creation of PODs, Replica sets, deployment, services , volums etc
+
+Best sutiable softwares for Yaml creation :
+IDE : pycharm with k8s plugin
+validation : http://www.yamllint.com/ 
+
+Structure as follows ( Mandatory fields for every yaml file)
+```yaml
+apiVersion:
+Kind:
+metadata:
+
+spec:
+```
+
+Create nginx pod using YAML
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    name: myapp-pod
+    app: my-app
+    type: pod
+spec:
+  containers:
+    - name: nginx-image
+      image: nginx
+
+```
+
+create redis pod with invalid image 
+
+```shell
+apiVersion: v1
+kind: Pod
+metadata:
+  name: redis
+  labels:
+    name: redis-label
+    app: db
+spec:
+  containers:
+    - name: redis
+      image: redis123
+```
+
+
+```shell
+master $ kubectl apply -f redis.yml
+pod/redis created
+master $ kubectl get pods
+NAME            READY   STATUS         RESTARTS   AGE
+myapp-pod       1/1     Running        0          14m
+newpods-69wx8   1/1     Running        0          14m
+newpods-t7n4r   1/1     Running        0          14m
+newpods-wqhcp   1/1     Running        0          14m
+redis           0/1     ErrImagePull   0          7s
+```
+After correting the image name to **redis**
+```shell
+master $ vi redis.yml
+master $ kubectl apply -f redis.yml
+pod/redis configured
+master $ kubectl get pods
+NAME            READY   STATUS    RESTARTS   AGE
+myapp-pod       1/1     Running   0          16m
+newpods-69wx8   1/1     Running   0          16m
+newpods-t7n4r   1/1     Running   0          16m
+newpods-wqhcp   1/1     Running   0          16m
+redis           1/1     Running   0          100s
+```
+
+
+K8s Commands :
+
+Remove pod 
+
+`kubectl delete pod <pod-name>`
+
+get pods
+
+`kubectl get pods`
+
+get nodes
+
+`kubectl get nodes`
+
