@@ -183,6 +183,14 @@ newpods-wqhcp   1/1     Running   0          16m
 redis           1/1     Running   0          100s
 ```
 
+# Replication Controllers and ReplicaSets
+
+> Controllers are brain behind K8s.
+> Controllers are the processors that  monitor k8s objects and respond accordingly.
+
+**Replication Controller**
+
+
 
 K8s Commands :
 
@@ -193,5 +201,66 @@ Remove pod  `kubectl delete pod <pod-name>`
 get pods `kubectl get pods`
 
 get nodes `kubectl get nodes`
+
+scale replicaSet `kubectl scale --replicas=6 -f fileName.yml`
+
+replace pod/replicaset file `kubectl replace -f fileName.yml` [but changes does not reflect in .yml file]
+
+replace replicas `kubectl scale --replicas=6 replicaset myapp-replicaset ` [but changes does not reflect in .yml file]
+
+get replicaSets `kubectl get replicaset`
+
+delete replicaSet `kubectl delete replicaset myapp-replicaset` [also delete underlaying pods ]
+
+update repilcaSet `kubectl edit replicaset replicaSetName` [get replicaSet name using command `kubect get replicaset`]
+
+Create a new Deployment with the below attributes using your own deployment definition file
+Name: httpd-frontend; Replicas: 3; Image: httpd:2.4-alpine
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: httpd-frontend
+  labels:
+    name: mydeployment-app
+    type: front-end
+spec:
+  #Get the pod template to create new pod for reference
+  template:
+    metadata:
+      name: httpd-pod
+      labels:
+        name: httpd
+    spec:
+      containers:
+        - name: httpd-image
+          image: httpd:2.4-alpine
+  replicas: 3
+  #Link to pod label
+  selector:
+    matchLabels:
+      name: httpd
+```
+
+output :
+
+```shell
+master $ kubectl get all
+NAME                                       READY   STATUS             RESTARTS   AGE
+pod/httpd-frontend-5cd44f5b67-5s7lz        1/1     Running            0          108s
+pod/httpd-frontend-5cd44f5b67-76v97        1/1     Running            0          108s
+pod/httpd-frontend-5cd44f5b67-pq5gb        1/1     Running            0          108s
+
+NAME                 TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)   AGE
+service/kubernetes   ClusterIP   10.96.0.1    <none>        443/TCP   15m
+
+NAME                                  READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/httpd-frontend        3/3     3            3           108s
+
+NAME                                             DESIRED   CURRENT   READY   AGE
+replicaset.apps/httpd-frontend-5cd44f5b67        3         3         3       108s
+```
+
 
 
