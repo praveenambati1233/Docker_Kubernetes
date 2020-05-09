@@ -1,8 +1,3 @@
-
-
-
-
-
 | sno  |  Topics  |
 | ------------ | ------------ |
 |  1  |  [YAML Examples](#YAML) |
@@ -405,7 +400,11 @@ C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout undo d
 deployment.extensions/frontend rolled back
 ```
 
-look at the revision 
+look at the revision 2, 3. Before undo our changes was 1,2.
+Internally 
+K8s **records** the revision history with what command we rollout.
+when we undo k8s create new reivions in this case it is 3 and executes the revision 1 rollout. 
+Note - You couldn't see CHANGE-CAUSE details because I have used --record when I run the kubectl create command.
 
 ```shell
 C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout history  deployment/frontend
@@ -418,3 +417,13 @@ REVISION  CHANGE-CAUSE
 upgrade and undo commands works as below.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/rollingupgrade.PNG)
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout status deployment/frontend
+Waiting for deployment "frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "frontend" rollout to finish: 1 old replicas are pending termination...
+Waiting for deployment "frontend" rollout to finish: 3 of 4 updated replicas are available...
+deployment "frontend" successfully rolled out
+
+```
