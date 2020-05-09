@@ -309,6 +309,8 @@ Each Pod get it's own IP address in k8s
 
 It is Kubernetes object that comes higher in the hierarchy, the deployment provides us with the capability to **upgrade** the underlying instances seamlessly using **rolling updates.** **Undo changes** and **pause** and **resume changes** as required.
 
+![](https://github.com/praveenambati1233/docker/blob/master/deployment.PNG)
+
 When you first create a deployment it triggers a rollout a new rollout creates a new deployment revision.
 
 Let's call it revision 1, in the future when the application is upgraded meaning when the container version is updated to a new one a new rollout is triggered and a new deployment revision is created named revision 2.
@@ -323,5 +325,96 @@ REVISION  CHANGE-CAUSE
 1         <none>
 ```
 
+There are two types of upgrades in deployment stratagy
+1. Create ( downtime will be there as we bring down deployment at a time)
+2. Rolling update ( default )
 
+**Example**
 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: mywebsite
+    tier: frontend
+spec:
+  replicas: 4
+  template:
+    metadata:
+      name: myapp-pod
+      # Labeling is important to refer and create new pod by replicaSet
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+  selector:
+    matchLabels:
+      # Refer Label from pod template
+      app: myapp
+```
+create deployment
+```shell
+kubectl create -f deployments-definition.yml
+```
+JFYI you can also create deployment by using below command
+
+```
+kubectl run nginx --image=nginx
+```
+
+A new deployment will be rolledout
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes>kubectl rollout history  deployment/frontend
+deployment.extensions/frontend
+REVISION  CHANGE-CAUSE
+1         <none>
+```
+
+Change Request :` image: library/nginx:1.7.1`
+
+```shell
+kubectl apply -f deployments-definition.yml
+deployment.apps/frontend configured
+```
+
+A new version will be created
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout undo deployment/frontend
+deployment.extensions/frontend rolled back
+```
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes>kubectl rollout history  deployment/frontend
+deployment.extensions/frontend
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+```
+
+If you want to **undo** your changes in the deployment.
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout undo deployment/frontend
+deployment.extensions/frontend rolled back
+```
+
+look at the revision 
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout history  deployment/frontend
+deployment.extensions/frontend
+REVISION  CHANGE-CAUSE
+2         <none>
+3         <none>
+```
+
+upgrade and undo commands works as below.
+
+![](https://github.com/praveenambati1233/docker/blob/master/rollingupgrade.PNG)
