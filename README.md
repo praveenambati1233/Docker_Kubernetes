@@ -194,7 +194,13 @@ redis           1/1     Running   0          100s
 
 K8s Commands :
 
-create pod `kubectl apply -f fileName.yml` 
+create pod 
+`kubectl apply -f fileName.yml` 
+
+Sample pod defintion yml file
+
+`kubectl run <pod-name> --image <image-name>`
+
 
 Remove pod  `kubectl delete pod <pod-name>`
 
@@ -266,17 +272,30 @@ replicaset.apps/httpd-frontend-5cd44f5b67        3         3         3       108
 
 Node
 
-Kubernetes is configured on one or more Nodes. A node is a machine – physical or virtual – on which kubernetes is installed. A node is a worker machine and this is were containers are hosted. \
+Kubernetes is configured on one or more Nodes. A node is a machine – physical or virtual – on which kubernetes is installed. A node is a worker machine and this is were containers are hosted. 
 
-But what if the node on which our application is running fails? Well, obviously our application goes down. So you need to have more than one nodes for **high availability **and **scaling**. \
+But what if the node on which our application is running fails? Well, obviously our application goes down. So you need to have more than one nodes for **high availability **and **scaling**. 
 
-A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. \
+A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. 
 
-A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. \
+A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. 
 
 ![](https://github.com/praveenambati1233/docker/blob/master/cluster.PNG)
 
 Now we have a cluster, but who is responsible for managing the cluster? Were is the information about the members of the cluster stored? How are the nodes monitored? When a node fails how do you move the workload of the failed node to another worker node? That’s were the Master comes in. The master is another node with Kubernetes installed in it, and is configured as a Master.   The master watches over the nodes in the cluster and is responsible for the actual orchestration of containers on the worker nodes. 
 
 ![](https://github.com/praveenambati1233/docker/blob/master/MasterNodeAndWorkerNode.PNG)
+
+**Kubernetes Architecture**
+
+![](https://github.com/praveenambati1233/docker/blob/master/k8sArch.PNG)
+
+
+**Pod**
+
+The containers are encapsulated into a Kubernetes object known as PODs.
+
+
+Each Pod get it's own IP address in k8s 
+
 
