@@ -1,3 +1,8 @@
+
+
+
+
+
 | sno  |  Topics  |
 | ------------ | ------------ |
 |  1  |  [YAML Examples](#YAML) |
@@ -393,7 +398,7 @@ REVISION  CHANGE-CAUSE
 
 ```
 
-If you want to **undo** your changes in the deployment.
+If you want to **undo** your changes in the deployment. Below command has to run
 
 ```shell
 C:\Users\praveena\IdeaProjects\Kubernetes\src\deployments>kubectl rollout undo deployment/frontend
@@ -427,3 +432,19 @@ Waiting for deployment "frontend" rollout to finish: 3 of 4 updated replicas are
 deployment "frontend" successfully rolled out
 
 ```
+
+
+**Service**
+
+The service is in fact like a virtual server inside the node. Inside the cluster,
+It has its own IP address and that IP address is called the cluster IP of the service.
+
+Service can help us by mapping a port on the node to a port on the pod.
+
+Service listen to a port on the node and forward request on that port to a port on the pod running the web application this type of service is known as a **node port** service. Because the service listens to port on the node and forward requests to the pods.
+
+
+Types of Services
+
+
+
