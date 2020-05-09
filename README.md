@@ -208,9 +208,9 @@ get pods `kubectl get pods`
 
 get nodes `kubectl get nodes`
 
-scale replicaSet `kubectl scale --replicas=6 -f fileName.yml`
+scale replicaSet `kubectl scale --replicas=6 -f fileName.yml` [this does not effect the replicaset file]
 
-replace pod/replicaset file `kubectl replace -f fileName.yml` [but changes does not reflect in .yml file]
+replace pod/replicaset file `kubectl replace -f fileName.yml`
 
 replace replicas `kubectl scale --replicas=6 replicaset myapp-replicaset ` [but changes does not reflect in .yml file]
 
@@ -219,6 +219,13 @@ get replicaSets `kubectl get replicaset`
 delete replicaSet `kubectl delete replicaset myapp-replicaset` [also delete underlaying pods ]
 
 update repilcaSet `kubectl edit replicaset replicaSetName` [get replicaSet name using command `kubect get replicaset`]
+
+all about describe 
+`kubectl describe  deployment <deployment-name>`
+`kubectl describe  pod <pod-name>`
+`kubectl describe  replicaset <replicaset-name>`
+
+
 
 Create a new Deployment with the below attributes using your own deployment definition file
 Name: httpd-frontend; Replicas: 3; Image: httpd:2.4-alpine
@@ -297,5 +304,24 @@ The containers are encapsulated into a Kubernetes object known as PODs.
 
 
 Each Pod get it's own IP address in k8s 
+
+**Deployment**
+
+It is Kubernetes object that comes higher in the hierarchy, the deployment provides us with the capability to **upgrade** the underlying instances seamlessly using **rolling updates.** **Undo changes** and **pause** and **resume changes** as required.
+
+When you first create a deployment it triggers a rollout a new rollout creates a new deployment revision.
+
+Let's call it revision 1, in the future when the application is upgraded meaning when the container version is updated to a new one a new rollout is triggered and a new deployment revision is created named revision 2.
+
+```shell
+C:\Users\praveena\IdeaProjects\Kubernetes>kubectl rollout status deployment/frontend
+deployment "frontend" successfully rolled out
+
+C:\Users\praveena\IdeaProjects\Kubernetes>kubectl rollout history deployment/frontend
+deployment.extensions/frontend
+REVISION  CHANGE-CAUSE
+1         <none>
+```
+
 
 
