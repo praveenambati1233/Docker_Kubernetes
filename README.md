@@ -452,6 +452,9 @@ Types of Services
 
 # CMD and ENTRYPOINT in Docker
 
+> CMD instruction the command line parameters passed will get replaced entirely.
+>ENTRYPOINT the command line parameters will get appended. 
+
 **usecase:**
 
 `$docker run ubuntu --image=ubuntu`
@@ -500,5 +503,99 @@ so to elimiate the "sleep" command  in the run command, we need to use **ENTRYPO
 
 ![](https://github.com/praveenambati1233/docker/blob/master/cmdvsentrypoint.PNG)
 
-> Note : CMD instruction the command line parameters passed will get replaced entirely.
-ENTRYPOINT the command line parameters will get appended. 
+
+In Kubernetes,  
+
+Docker CMD = args: [""]
+Doker ENTRYPOINT = command: [""]
+
+
+> Inspect the file 'Dockerfile2' given at /root/webapp-color. What command is run at container startup?Inspect the file 'Dockerfile2' given at /root/webapp-color. What command is run at container startup?
+
+```shell
+cat Dockerfile2FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+
+CMD ["--color", "red"]
+```
+Answer : python appy.py --color red
+
+> Inspect the two files under directory 'webapp-color-2'. What command is run at container startup?Inspect the two files under directory 'webapp-color-2'. What command is run at container startup?
+
+```shell
+master $ cat Dockerfile2FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+
+CMD ["--color", "red"]
+```
+
+```yaml
+master $ cat webapp-color-pod.yaml
+apiVersion: v1
+kind: Podmetadata:  name: webapp-green
+  labels:
+      name: webapp-greenspec:
+  containers:
+  - name: simple-webapp
+    image: kodekloud/webapp-color
+    command: ["--color","green"]
+```
+
+Answer :  --color green
+Hint : The 'command' (entrypoint) is overridden in the pod definition. So the answer is --color green
+
+>Inspect the two files under directory 'webapp-color-3'. What command is run at container startup?
+Assume the image was created from the Dockerfile in this folder
+
+```shell
+master $ cat Dockerfile2FROM python:3.6-alpine
+
+RUN pip install flask
+
+COPY . /opt/
+
+EXPOSE 8080
+
+WORKDIR /opt
+
+ENTRYPOINT ["python", "app.py"]
+
+CMD ["--color", "red"]
+```
+
+```shell
+master $ cat webapp-color-pod-2.yamlapiVersion: v1
+kind: Pod
+metadata:
+  name: webapp-green
+  labels:
+      name: webapp-green
+spec:
+  containers:
+  - name: simple-webapp
+    image: kodekloud/webapp-color
+    command: ["python", "app.py"]
+    args: ["--color", "pink"]
+```
+**Answer** : python app.py --color pink
+**Explanation** :
+CMD instruction the command line parameters passed will get replaced entirely.
+Docker CMD = args: [""] in Kubernetes
