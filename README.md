@@ -446,5 +446,59 @@ Service listen to a port on the node and forward request on that port to a port 
 
 Types of Services
 
+![](https://github.com/praveenambati1233/docker/blob/master/serviceNodePort.PNG)
 
 
+
+# CMD and ENTRYPOINT in Docker
+
+**usecase:**
+
+`$docker run ubuntu --image=ubuntu`
+
+Docker creates a container from the Ubuntu image and execute Command (CMD) instruction /bin/bash program and looks for bash terminal since it is not 
+attached while running the docker run command it immediately exits. 
+
+```shell
+FROM scratch
+....
+....
+
+CMD ["/bin/bash"]
+```
+
+So how do you specify a different command to start the container ?
+
+One option is to append the command to the docker run command and that way it overrides the default command specified within the image.
+
+```shell
+$docker run ubuntu sleep 5 // this overrides /bin/bash to sleep 5
+```
+
+so how to make this permanent  ? when you run ubuntu image by default it should sleep for 5 seconds
+
+To make this happen create sleeper version of ubuntu image with CMD instruction to execute at the time of container creation.
+
+*dockerFile - ubuntu-sleeper*
+
+```shell
+FROM ubuntu
+CMD ["sleep", "5"]
+```
+
+`$docker run ubuntu-sleeper `
+
+Currently it is hardcoded to 5 seconds. let's say now you want increase the sleep time. As we learn before, one option is to run the docker run command with the new command appended to it.
+
+`$docker run ubuntu-sleeper sleep 10`
+
+In this case sleep 10 and so the command that will be run at startup will be sleep 10.
+
+But it doesn't look very good. the new version of ubuntu image that we created sounds ubuntu-sleeper but we have to send command as "sleep 10"
+
+so to elimiate the "sleep" command  in the run command, we need to use **ENTRYPOINT** instruction.
+
+![](https://github.com/praveenambati1233/docker/blob/master/cmdvsentrypoint.PNG)
+
+> Note : CMD instruction the command line parameters passed will get replaced entirely.
+ENTRYPOINT the command line parameters will get appended. 
