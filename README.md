@@ -1,4 +1,3 @@
-
 | sno  |  Topics  |
 | ------------ | ------------ |
 |  1  |  [YAML Examples](#YAML) |
@@ -639,7 +638,7 @@ spec:
 
 
 
-# Service account 
+# Service Account 
 
 The concept of service accounts is linked to other security related concepts such as authentication,authorization, role-based access controls etc
 
