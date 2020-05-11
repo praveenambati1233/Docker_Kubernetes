@@ -289,7 +289,7 @@ A cluster is a set of nodes grouped together. This way even if one node fails yo
 
 A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. 
 
-![](https://github.com/praveenambati1233/docker/blob/master/cluster.png)
+![](https://github.com/praveenambati1233/docker/blob/master/cluster.PNG)
 
 Now we have a cluster, but who is responsible for managing the cluster? Were is the information about the members of the cluster stored? How are the nodes monitored? When a node fails how do you move the workload of the failed node to another worker node? That’s were the Master comes in. The master is another node with Kubernetes installed in it, and is configured as a Master.   The master watches over the nodes in the cluster and is responsible for the actual orchestration of containers on the worker nodes. 
 
@@ -311,7 +311,7 @@ Each Pod get it's own IP address in k8s
 
 It is Kubernetes object that comes higher in the hierarchy, the deployment provides us with the capability to **upgrade** the underlying instances seamlessly using **rolling updates.** **Undo changes** and **pause** and **resume changes** as required.
 
-![](https://github.com/praveenambati1233/docker/blob/master/deployment.PNG)
+![](https://github.com/praveenambati1233/docker/blob/master/deployment.png)
 
 When you first create a deployment it triggers a rollout a new rollout creates a new deployment revision.
 
