@@ -1,8 +1,4 @@
 
-
-
-
-
 | sno  |  Topics  |
 | ------------ | ------------ |
 |  1  |  [YAML Examples](#YAML) |
@@ -313,6 +309,7 @@ It is Kubernetes object that comes higher in the hierarchy, the deployment provi
 
 ![](https://github.com/praveenambati1233/docker/blob/master/deployment.png)
 
+
 When you first create a deployment it triggers a rollout a new rollout creates a new deployment revision.
 
 Let's call it revision 1, in the future when the application is upgraded meaning when the container version is updated to a new one a new rollout is triggered and a new deployment revision is created named revision 2.
@@ -378,6 +375,10 @@ REVISION  CHANGE-CAUSE
 ```
 
 Change Request :` image: library/nginx:1.7.1`
+
+Alternate way to update deplyments 
+
+`kubectl edit deployment.v1.apps/<deployment-name>`
 
 ```shell
 kubectl apply -f deployments-definition.yml
@@ -640,7 +641,45 @@ spec:
 
 # Service account 
 
-Service account creation 
+The concept of service accounts is linked to other security related concepts such as authentication,authorization, role-based access controls etc
+
+for CDAD - Concept understanding.
+
+As service account could be an account used by an application to interact with a Kubernetes cluster.
+For example a monitoring application like Prometheus is used as a service account to pull the Kubernet--es API for performance metrics. An automated build tool like Jenkin's uses service accounts to deploy applications on the Kubernetes cluster.
+
+If you look  at the list of service accounts, you will see that there is a default service account that exists already. For every namespace in Kubernetes, a service account named "default" is automatically created. Each namespace has its own default service account. Whenever a pod create, The default service account and it's token are automatically mounted to that pod as a volume mount. For example we have a simple pod definition file that creates a pod using my custom Kubernetes dashboard image.
+We haven't specified any secrets or Volume mounts in the definition file.However when the pod is created if you look at the details of the pod by running the kubectl describe pod command you'll see that a volume is automatically created from the secret named "default-token" which is in fact the secret containing the token for this default service account.
+The secret token is mounted at location /var/run/secrets/kubernetes.io/service/account inside the pod.
+
+![](https://github.com/praveenambati1233/docker/blob/master/defaultServiceAccount.PNG)
+
+So from inside the pod if you run the ls command to list the contents of the directory you will see the secret monitored as three separate files.
+The one with the actual token is the file named "token".
+
+
+```shell
+C:\Users\praveena>kubectl exec -it frontend-7c8875466f-cspjg ls /var/run/secrets/kubernetes.io/serviceaccount
+ca.crt  namespace  token
+```
+
+If you view contents of that file you will see the token to be used for accessing the Kubernetes API.
+
+```shell
+C:\Users\praveena>kubectl exec -it frontend-7c8875466f-cspjg cat /var/run/secrets/kubernetes.io/serviceaccount/token
+eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRlZmF1bHQtdG9rZW4tZG5tOWciLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC5uYW1lIjoiZGVmYXVsdCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50LnVpZCI6IjQyMzMwM2E3LThlYTMtNDlhOC1iYWY1LTkwOTM2ODNmOWRjYiIsInN1YiI6InN5c3RlbTpzZXJ2aWNlYWNjb3VudDpkZWZhdWx0OmRlZmF1bHQifQ.TgVPp1Ca8WmiN_sTqkBVSDer0JANa9phA54_Q-Vf5cWl8fqghg3kVdtpL9_kO8B3j4FSHlDuYkPNyYHH_xWWIMwSFVwJSYnJMd_rAfBx6y0B6pNaGvr-kQXohglXf3NBJaKT7oM4OpRNXxtrUpTfz306E-TO226-1hQJrcj0uH1TOQPdmO5DdFvqDtaQ0Wl7fsesbzr8rF5gGFhidoCb3pqNLnluZceT-RWxvZ_0yBxQooimqR0RffM3TQWZYAcihe6VTxRlYudZdw8EDcUGwdK8S3d57rTWj4sLrbA30lXe6nd3Fruz-9YG4rAa-S2uovsQUm7EbYdDGWLXmE7RdA
+```
+
+Now remember that the default service account is very much restricted.
+It only has permission to run basic Kubernetes API queries. If you'd like to use a different service account. such as the one we just created modified the pot definition file to include a service account field and specify the name of the new service account. Remember, you cannot edit the service account of an You must delete and recreate the pod. **However in case of a deployment you will be able to get the service account as any changes to the pod definition file will automatically trigger a new rollout for the deployment.
+So the deployment will take care of deleting and recreating new pods with the right service account.**
+
+When you look at the pod details now you'll see that the new service account is being used.
+So remember Kubernetes automatically mount the default service account.
+If you haven't explicitly specified any you may choose not to mount a service account automatically by setting the auto mount service account token field to false in the pod spec section. `automountServiceAccountToken: false`
+
+**Service account creation** 
+
 ```yaml
 apiVersion: v1
 kind: ServiceAccount
@@ -648,7 +687,24 @@ metadata:
  name: dashboard-sa
 ```
 
-How to get the service tokena for service account dash
+To use service account in POD
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-pod
+  labels:
+    type: pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      args: ["sleep","10"]
+  serviceAccountName: dashboard-sa
+```
+
+How to get the service token for service account dash
 
 ```shell
 master $ kubectl describe serviceaccount dashboard-sa
@@ -674,5 +730,3 @@ ca.crt:     1025 bytes
 namespace:  7 bytes
 token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Il9fazlVWXhqWXFRanZXOG9Db0IwejE1aFZIYWRGbUs0VTZLSTJoTkU2TE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRhc2hib2FyZC1zYS10b2tlbi1objZzaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkYXNoYm9hcmQtc2EiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI1ZjZmMWY4YS05ZDM0LTQ3M2ItOWZmNS1lOGNhNmI5M2JkNjciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkYXNoYm9hcmQtc2EifQ.CfWcW9fPH0NeyXG5uxqu1ornIFw3Nh4VrgZR9cUWZYpKK20RjSW0KMhIlJgQuUZQAM3XZJzqmK50opQ4JxXIZI3LGK1Nd1QIip6lHiFj7stNK5EldGXDjjNy5G8VbELJ5phdTAWyDBZIIyfuMDze2KEEtuNw4gDIZGTn73Bm_5tEr3KvVSJegUrrioMlE-BLn05RFc1MyG5HgZm88FtrOWDx8aenuGzeJsGxachKg__A4h2LvwuuqNa1sq01Ssw04RMrmhJHNI2jwE53wAJfBbSeYN9WIj7LNVO3FP_n3AngeFL9smqUEXZP75iwqN-Ued0ZNQaESyM-i9IvmyLJXg
 ```
-
-
