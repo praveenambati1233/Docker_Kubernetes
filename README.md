@@ -33,6 +33,8 @@
 
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
 
+edit the deployment `kubectl edit deployment.v1.apps/web-dashboard`
+
 
 ------------
 
@@ -287,7 +289,7 @@ A cluster is a set of nodes grouped together. This way even if one node fails yo
 
 A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. 
 
-![](https://github.com/praveenambati1233/docker/blob/master/cluster.PNG)
+![](https://github.com/praveenambati1233/docker/blob/master/cluster.png)
 
 Now we have a cluster, but who is responsible for managing the cluster? Were is the information about the members of the cluster stored? How are the nodes monitored? When a node fails how do you move the workload of the failed node to another worker node? That’s were the Master comes in. The master is another node with Kubernetes installed in it, and is configured as a Master.   The master watches over the nodes in the cluster and is responsible for the actual orchestration of containers on the worker nodes. 
 
@@ -599,3 +601,78 @@ spec:
 **Explanation** :
 CMD instruction the command line parameters passed will get replaced entirely.
 Docker CMD = args: [""] in Kubernetes
+
+# Config Maps / Environment variables
+
+configmap/configmap-multikeys.yaml 
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: special-config
+  namespace: default
+data:
+  SPECIAL_LEVEL: very
+  SPECIAL_TYPE: charm
+```
+
+Above configMap data configurated in the pod resource.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: dapi-test-pod
+spec:
+  containers:
+    - name: test-container
+      image: k8s.gcr.io/busybox
+      envFrom:
+      - configMapRef:
+          name: special-config
+  ```
+
+# Docker Security
+
+
+
+
+# Service account 
+
+Service account creation 
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+ name: dashboard-sa
+```
+
+How to get the service tokena for service account dash
+
+```shell
+master $ kubectl describe serviceaccount dashboard-sa
+Name:                dashboard-sa
+Namespace:           default
+Labels:              <none>
+Annotations:         <none>
+Image pull secrets:  <none>
+Mountable secrets:   dashboard-sa-token-hn6sh
+Tokens:              dashboard-sa-token-hn6sh
+Events:              <none>
+master $ kubectl describe secret dashboard-sa-token-hn6sh
+Name:         dashboard-sa-token-hn6shNamespace:    default
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: dashboard-sa
+              kubernetes.io/service-account.uid: 5f6f1f8a-9d34-473b-9ff5-e8ca6b93bd67
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+ca.crt:     1025 bytes
+namespace:  7 bytes
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Il9fazlVWXhqWXFRanZXOG9Db0IwejE1aFZIYWRGbUs0VTZLSTJoTkU2TE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRhc2hib2FyZC1zYS10b2tlbi1objZzaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkYXNoYm9hcmQtc2EiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI1ZjZmMWY4YS05ZDM0LTQ3M2ItOWZmNS1lOGNhNmI5M2JkNjciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkYXNoYm9hcmQtc2EifQ.CfWcW9fPH0NeyXG5uxqu1ornIFw3Nh4VrgZR9cUWZYpKK20RjSW0KMhIlJgQuUZQAM3XZJzqmK50opQ4JxXIZI3LGK1Nd1QIip6lHiFj7stNK5EldGXDjjNy5G8VbELJ5phdTAWyDBZIIyfuMDze2KEEtuNw4gDIZGTn73Bm_5tEr3KvVSJegUrrioMlE-BLn05RFc1MyG5HgZm88FtrOWDx8aenuGzeJsGxachKg__A4h2LvwuuqNa1sq01Ssw04RMrmhJHNI2jwE53wAJfBbSeYN9WIj7LNVO3FP_n3AngeFL9smqUEXZP75iwqN-Ued0ZNQaESyM-i9IvmyLJXg
+```
+
+
