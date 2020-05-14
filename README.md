@@ -4,7 +4,10 @@
 |  2  |  [Optimize Docker Files](#Optimize-Docker-Files)  |
 | 3 | [Creating pod using YAML](#Creating-pod-using-YAML) |
 
-
+||
+||
+||
+||
 
 
 `docker run` command is used to run a container from an image.
@@ -28,7 +31,21 @@
 
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
 
-edit the deployment `kubectl edit deployment.v1.apps/web-dashboard`
+edit the deployment `kubectl edit deployment.v1.apps/web-dashboard` 
+
+setting the namespace `kubectl config set-context --current --namespace=<insert-namespace-name-here>` 
+
+list of images in a pod `kubectl get pods my-app-976b6864f-5mchm -o=jsonpath="{..image}"` [basically this commands return pulled image and latest image, not sure why ? ]
+
+more : https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod
+
+
+scale the pod `kubectl scale -n default replicaset my-app-976b6864f --replicas=3`
+
+
+
+
+
 
 
 ------------
@@ -728,4 +745,43 @@ Data
 ca.crt:     1025 bytes
 namespace:  7 bytes
 token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Il9fazlVWXhqWXFRanZXOG9Db0IwejE1aFZIYWRGbUs0VTZLSTJoTkU2TE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRhc2hib2FyZC1zYS10b2tlbi1objZzaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkYXNoYm9hcmQtc2EiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI1ZjZmMWY4YS05ZDM0LTQ3M2ItOWZmNS1lOGNhNmI5M2JkNjciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkYXNoYm9hcmQtc2EifQ.CfWcW9fPH0NeyXG5uxqu1ornIFw3Nh4VrgZR9cUWZYpKK20RjSW0KMhIlJgQuUZQAM3XZJzqmK50opQ4JxXIZI3LGK1Nd1QIip6lHiFj7stNK5EldGXDjjNy5G8VbELJ5phdTAWyDBZIIyfuMDze2KEEtuNw4gDIZGTn73Bm_5tEr3KvVSJegUrrioMlE-BLn05RFc1MyG5HgZm88FtrOWDx8aenuGzeJsGxachKg__A4h2LvwuuqNa1sq01Ssw04RMrmhJHNI2jwE53wAJfBbSeYN9WIj7LNVO3FP_n3AngeFL9smqUEXZP75iwqN-Ued0ZNQaESyM-i9IvmyLJXg
+```
+
+
+#Multi-container 
+
+
+
+
+# Readness probe
+
+If you look below simple-webapp-2 is up and running but still the user request getting failed. Because simple-webapp-2 takes 80 sec to start the application and will get ready to accept traffic ( boot time )
+```shell
+master $ kubectl get all
+NAME                  READY   STATUS    RESTARTS   AGE
+pod/simple-webapp-1   1/1     Running   0          71s
+pod/simple-webapp-2   1/1     Running   0          26s
+
+NAME                     TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+service/kubernetes       ClusterIP   10.96.0.1       <none>        443/TCP          4m22s
+service/webapp-service   NodePort    10.109.13.241   <none>        8080:30080/TCP   71s
+master $ ./curl-test.sh
+Message from simple-webapp-1 : I am ready! OK
+
+Failed
+
+Message from simple-webapp-1 : I am ready! OK
+
+Failed
+
+Failed
+```
+
+
+program:
+
+```shell
+for i in {1..20}; do
+   kubectl exec --namespace=kube-public curl -- sh -c 'test=`wget -qO- -T 2  http://webapp-service.default.svc.cluster.local:8080/ready 2>&1` && echo "$test OK" || echo "Failed"';
+   echo ""
 ```
