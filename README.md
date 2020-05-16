@@ -843,3 +843,64 @@ for i in {1..20}; do
 
 
 
+
+
+# Pod Design
+
+**Labels and selectors:**
+
+Two types of selecting the objects using selectors
+
+1. Equality-based requirement
+`= == !=`
+2. Set-based requirement
+`in,notin and exists`
+
+**Examples:** 
+```shell
+#simple way
+$kubectl get po -l env=dev
+
+#Set-based 
+$ kubectl get po -l 'env in (dev)'
+$ kubectl get all -l 'env in (prod)'
+$ kubectl get po -l 'env in (prod),bu in (finance),tier in (frontend)'
+
+#Equality-based
+$ kubectl get po --selector env=dev
+$ kubectl get all --selector env= prod'
+$ kubectl get po --selector env=prod,bu=finance,tier=frontend'
+```
+
+**overwrite the label**
+
+`$ kubectl label po db-1-5lj5n env=prod --overwrite`
+
+**Get the the label**
+
+`$ kubectl get po -L <labelname>`
+
+```shell
+master $ kubectl get po -L env
+NAME          READY   STATUS    RESTARTS   AGE     **ENV**
+app-1-27fvf   1/1     Running   0          7m3s    devapp-1-7d6d8   1/1     Running   0          7m3s    dev
+app-1-m87z4   1/1     Running   0          7m3s    dev
+app-1-zzxdf   1/1     Running   0          7m2s    prod
+app-2-nf4sl   1/1     Running   0          7m3s    prod
+auth          1/1     Running   0          7m2s    prod
+db-1-5lj5n    1/1     Running   0          7m3s    prod
+db-1-cx9gq    1/1     Running   0          7m3s    dev
+db-1-kbhrc    1/1     Running   0          7m3s    dev
+db-1-rfjc7    1/1     Running   0          2m12s   dev
+db-1-xfb8f    1/1     Running   0          7m3s    dev
+```
+**Add annoattion to the exiting pod**
+
+`kubectl annotate po pod-name myannotation='my description`
+
+**Add label to the exiting pod**
+
+`kubectl label  po pod-name labels=app1=ver1
+
+
+
