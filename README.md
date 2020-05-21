@@ -4,11 +4,10 @@
 |  2  |  [Optimize Docker Files](#Optimize-Docker-Files)  |
 | 3 | [Creating pod using YAML](#Creating-pod-using-YAML) |
 
-||
-||
-||
-||
 
+**Useful URLs** 
+- https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
+- https://cheatsheet.dennyzhang.com/cheatsheet-kubernetes-a4
 
 `docker run` command is used to run a container from an image.
 
@@ -51,6 +50,14 @@ Get Pods on particular namespace `kubectl get pods --namespace=app-space`
 Get Pods on particular namespace `kubectl get services  --namespace=app-space`
 
 To get all the resouces `kubectl get all --all-namespaces`
+
+
+
+Deployment `kubectl run nginx --image=nginx`
+Pod `kubectl run nginx --image=nginx --restart=Never`
+Job `kubectl run busybox --image=busybox --restart=OnFailure`
+CronJob `kubectl run busybox --image=busybox --schedule="* * * * *"  --restart=OnFailure `
+
 
 
 create deployment and scale to 3 replicaset
@@ -471,17 +478,22 @@ deployment "frontend" successfully rolled out
 
 The service is in fact like a virtual server inside the node. Inside the cluster,
 It has its own IP address and that IP address is called the cluster IP of the service.
+A Kubernetes Service that identifies a set of Pods using label selectors. Unless mentioned otherwise, Services are assumed to have virtual IPs only routable within the cluster network. 
+Service has it's own load balancing technique when routes the traffic.
 
 Service can help us by mapping a port on the node to a port on the pod.
 
-Types of Services :
+**Types of Services :**
+
 1. NodePort
 2. ClusterIp
-3. LoadBalancer 
+3. LoadBalancer
 
 **1. NodePort**
 
 Service listen to a port on the node and forward request on that port to a port on the pod running the web application this type of service is known as a **node port** service. Because the service listens to port on the node and forward requests to the pods.
+
+![](https://github.com/praveenambati1233/docker/blob/master/serviceNodePort.PNG)
 
 **2. ClusterIp**
 
@@ -495,46 +507,27 @@ we have the web application on pods on separate nodes in the cluster.
 When we create a service without us having to do any additional configuration, kubernetes automatically creates a service that spans across all the nodes in the cluster and maps the target port to the same node port on all the nodes in the cluster.
 This way you can access your application using the IP of any node in the cluster and using the same port number which in this case is 30008. As you can see using the IP of any of these nodes.  And I'm trying to curl to the same port and the same port is made available on all the nodes part of the cluster. 
 
-To summarize, in any case whether it be a single pod on a single node, multiple pods on a single node or multiple pods on multiple nodes, the service is created exactly the same without you having to do  To summarize, in any case whether it be a single pod on a single node, multiple pods on a single node or multiple pods on multiple nodes, the service is created exactly the same without you having to do  any additional steps during the service creation. When Pods are removed or added, the service is automatically updated making its highly flexible and adaptive. Once created you won't typically have to make any additional configuration changes.
+To summarize, in any case whether it be a single pod on a single node, multiple pods on a single node or multiple pods on multiple nodes, the service is created exactly the same without you having to do  any additional steps during the service creation. When Pods are removed or added, the service is automatically updated making its highly flexible and adaptive. Once created you won't typically have to make any additional configuration changes.
 
 
  **3. LoadBalancer**
- 
- 
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-![](https://github.com/praveenambati1233/docker/blob/master/serviceNodePort.PNG)
 
 
 
 # CMD and ENTRYPOINT in Docker
 
-> CMD instruction the command line parameters passed will get replaced entirely.
->ENTRYPOINT the command line parameters will get appended. 
+> CMD : The command line parameters passed will get replaced entirely.
+>ENTRYPOINT : The command line parameters will get appended.
 
 **usecase:**
 
 `$docker run ubuntu --image=ubuntu`
 
-Docker creates a container from the Ubuntu image and execute Command (CMD) instruction /bin/bash program and looks for bash terminal since it is not 
-attached while running the docker run command it immediately exits. 
+Docker creates a container from the Ubuntu image and execute Command (CMD) instruction /bin/bash program and looks for bash terminal. Now bash is not really a process like your web server or database server. It is a shell that listens for inputs from a terminal.If it cannot find the terminal it exits.
 
 ```shell
 FROM scratch
@@ -571,18 +564,25 @@ Currently it is hardcoded to 5 seconds. let's say now you want increase the slee
 
 In this case sleep 10 and so the command that will be run at startup will be sleep 10.
 
-But it doesn't look very good. the new version of ubuntu image that we created sounds ubuntu-sleeper but we have to send command as "sleep 10"
+But it doesn't look  good. the new version of ubuntu image that we created sounds ubuntu-sleeper but we have to send command as "sleep 10"
 
 so to elimiate the "sleep" command  in the run command, we need to use **ENTRYPOINT** instruction.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/cmdvsentrypoint.PNG)
 
 
-In Kubernetes,  
+**In Kubernetes,**
 
+```shell
 Docker CMD = args: [""]
 Doker ENTRYPOINT = command: [""]
+```
 
+![](https://github.com/praveenambati1233/docker/blob/master/argsvscommand.PNG)
+
+![](https://github.com/praveenambati1233/docker/blob/master/argsvscommand_1.PNG)
+
+**Examples:**
 
 > Inspect the file 'Dockerfile2' given at /root/webapp-color. What command is run at container startup?Inspect the file 'Dockerfile2' given at /root/webapp-color. What command is run at container startup?
 
