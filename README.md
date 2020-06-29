@@ -5,6 +5,11 @@
 | 3 | [Creating pod using YAML](#Creating-pod-using-YAML) |
 
 
+**Exam curriculum**
+- https://github.com/cncf/curriculum/blob/master/CKAD_Curriculum_V1.18.pdf
+**Exam environment**
+- https://training.linuxfoundation.org/wp-content/uploads/2020/04/Important-Tips-CKA-CKAD-April2020.pdf
+
 **Useful URLs** 
 - https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 - https://cheatsheet.dennyzhang.com/cheatsheet-kubernetes-a4
@@ -51,12 +56,25 @@ Get Pods on particular namespace `kubectl get services  --namespace=app-space`
 
 To get all the resouces `kubectl get all --all-namespaces`
 
+args in imperative command  `kubectl run webapp-green --image=kodekloud/webapp-color -- "--color"="green"`
+command in imperative command   `kubectl run webapp-green --image=kodekloud/webapp-color --command "--color"="green"`
+
+k run ubuntu-sleeper-2 --image=ubuntu --restart=Never --command "sleep" "5000"
+
+Get the pod in yaml file `kubectl get po webapp-color -o yaml > web.yml`
 
 
 Deployment `kubectl run nginx --image=nginx`
+
 Pod `kubectl run nginx --image=nginx --restart=Never`
+
 Job `kubectl run busybox --image=busybox --restart=OnFailure`
+
 CronJob `kubectl run busybox --image=busybox --schedule="* * * * *"  --restart=OnFailure `
+
+create a service that exposes deployment on port 8080, target port with type nodePort `kubectl expose deploy simple-webapp-deployment  --port=8080 --target-port=8000  --name=webapp-service --dry-run -o yaml > service.yml` edit and add type: Node under spec
+
+Better query `kubectl expose deployment -n ingress-space ingress-controller --type=NodePort --port=80 --name=ingress --dry-run -o yaml >ingress.yaml`
 
 
 
@@ -495,12 +513,89 @@ Service listen to a port on the node and forward request on that port to a port 
 
 ![](https://github.com/praveenambati1233/docker/blob/master/serviceNodePort.PNG)
 
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  type: NodePort
+  selector:
+    name: simple-webapp
+  ports:
+      # By default and for convenience, the `targetPort` is set to the same value as the `port` field.
+    - port: 8080
+      targetPort: 8080
+      # Optional field
+      # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
+      nodePort: 30080
+```
+
+
+
 **2. ClusterIp**
 
 Above is about a service mapped to a single pod. But that's not the case all the time. What do you do when you have multiple pods? In the production environment you have multiple instances of your web application running for high availability and load balancing purposes.  In this case we have multiple similar pods running our web application. They all have the same labels with a key app and set to a value of myapp. The same label is used as
 a selector during the creation of the service. So when the service is created it looks for a matching pod with the label and finds three of them. The service then automatically selects all the three pods as endpoints to forward the external requests coming from the user.
 we  don't have to do any additional configuration to make this happen.
 And if you're wondering what algorithm it uses to balance the load across the three different pods, it uses a **random algorithm**. Thus the service acts as a builtin load balancer to distribute load across different pods.
+
+> Create a pod with image nginx called nginx and expose its port 80
+
+```shell
+C:\Users\praveena>kubectl run nginx --image=nginx  --port=80 --expose --replicas=3
+service/nginx created
+pod/nginx created
+```
+
+```shell
+C:\Users\praveena>kubectl get ep nginx
+NAME    ENDPOINTS                                AGE
+nginx   10.1.1.60:80,10.1.1.61:80,10.1.1.62:80   4m9s
+
+```
+
+To access nginx application we need wget/curl utility so let's download busybox.
+BusyBox is a software suite that provides several Unix utilities in a single executable file.
+
+Access : `wget -O- IP:Port`
+
+
+```shell
+C:\Users\praveena>kubectl run busybox --rm --image=busybox -it --restart=Never -- sh
+If you don't see a command prompt, try pressing enter.
+/ # wget -O- 10.1.1.**60**:80
+Connecting to 10.1.1.58:80 (10.1.1.58:80)
+writing to stdout
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+
+```
+
 
 And finally let's look at what happens when the pods are distributed across multiple nodes. In this case,
 we have the web application on pods on separate nodes in the cluster.
@@ -676,6 +771,12 @@ Docker CMD = args: [""] in Kubernetes
 
 # Config Maps / Environment variables
 
+**ConfigMap in Pod**
+
+![](https://github.com/praveenambati1233/docker/blob/master/env.png)
+
+**Ref URLs:**
+https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#add-configmap-data-to-a-volume
 configmap/configmap-multikeys.yaml 
 
 ```yaml
@@ -704,6 +805,8 @@ spec:
       - configMapRef:
           name: special-config
   ```
+Overridding the env variable `$ kubectl set env po  webapp-color  APP_COLOR=green --overwrite --dry-run -o yaml > pod.yml`
+
 
 # Docker Security
 
@@ -904,3 +1007,72 @@ db-1-xfb8f    1/1     Running   0          7m3s    dev
 
 
 
+# PV and PVC
+
+
+
+pv.yml
+
+```yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: pv-log
+spec:
+  capacity:
+    storage: 100Mi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: /pv/log
+```
+
+pvc.yml
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: claim-log-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 50Mi
+```
+
+```shell
+master $ k get pvc
+NAME          STATUS    VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim-log-1   Pending                                                     9s
+master $ k get pv
+NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+pv-log   100Mi      RWX            Retain           Available                                   2m36s
+```
+
+pvc and pv are not bonded due to accessModes are not same.
+
+modiy accessmode to ReadWriteMany in pvc.yml
+
+```shell
+master $ k get pvc
+NAME          STATUS   VOLUME   CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+claim-log-1   Bound    pv-log   100Mi      RWX                           3s
+master $ k get pv
+NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   REASON   AGE
+pv-log   100Mi      RWX            Retain           Bound    default/claim-log-1                           6m30s
+```
+
+
+# logs
+
+```shell
+master $ k get po
+NAME       READY   STATUS    RESTARTS   AGE
+webapp-1   1/1     Running   0          2m30s
+webapp-2   2/2     Running   0          113s
+
+#webapp-2 has 2 containers in it so to check specific container logs use -c option  
+master $ k logs -f webapp-2 -c simple-webapp
+```
