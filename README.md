@@ -11,7 +11,7 @@
 **Exam environment**
 - https://training.linuxfoundation.org/wp-content/uploads/2020/04/Important-Tips-CKA-CKAD-April2020.pdf
 
-**Useful URLs** 
+**Useful URLs for exam** 
 - https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 - https://cheatsheet.dennyzhang.com/cheatsheet-kubernetes-a4
 
