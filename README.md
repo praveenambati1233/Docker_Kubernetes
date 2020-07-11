@@ -7,6 +7,7 @@
 
 **Exam curriculum**
 - https://github.com/cncf/curriculum/blob/master/CKAD_Curriculum_V1.18.pdf
+
 **Exam environment**
 - https://training.linuxfoundation.org/wp-content/uploads/2020/04/Important-Tips-CKA-CKAD-April2020.pdf
 
