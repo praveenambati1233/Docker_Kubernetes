@@ -1,0 +1,31 @@
+#Create a busybox pod with command 'sleep 3600', save it on pod.yaml.
+#Mount the PersistentVolumeClaim to '/etc/foo'.
+#Connect to the 'busybox' pod, and copy the '/etc/passwd' file to '/etc/foo/passwd'
+
+Step 1:
+C:\Users\praveena>kubectl run busybox --image=busybox --dry-run=client --restart=Never -o yaml -- /bin/sh -c 'sleep 3600' > pod.yml
+
+Step 2: edit the pod.yml
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+    - args:
+        - /bin/sh
+        - -c
+        - 'sleep 3600'
+      image: busybox
+      name: busybox
+      volumeMounts:
+        - name: vol
+          mountPath: /etc/foo
+  volumes:
+    - name: vol
+      persistentVolumeClaim:
+        claimName: mypvc

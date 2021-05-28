@@ -1,0 +1,6 @@
+#Get the label 'app' for the pods (show a column with APP labels)
+
+$kubectl get po nginx2 -L=app
+C:\Users\praveena>kubectl get po -L=app
+NAME     READY   STATUS    RESTARTS   AGE     APP
+nginx2   1/1     Running   0          7m32s   v2

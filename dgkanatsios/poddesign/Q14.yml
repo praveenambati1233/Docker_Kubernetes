@@ -1,0 +1,13 @@
+#Check the rollout history and confirm that the replicas are OK
+
+controlplane $ k rollout history deploy nginx
+deployment.apps/nginx
+REVISION  CHANGE-CAUSE
+1         <none>
+2         <none>
+
+controlplane $ k get rs
+NAME               DESIRED   CURRENT   READY   AGE
+nginx-5d59d67564   2         2         2       60s
+nginx-8f5cc57cf    0         0         0       4m52s
+

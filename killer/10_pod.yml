@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    project: plt-6cc-api
+  name: project-plt-6cc-api
+  namespace: pluto
+spec:
+  containers:
+  - image: nginx:1.17.3-alpine
+    name: project-plt-6cc-api
+  tolerations:
+  - key: "node-role.kubernetes.io/master"
+    operator: "Exists"

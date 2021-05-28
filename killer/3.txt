@@ -1,0 +1,51 @@
+Team Neptune needs a Job template located at /opt/course/3/job.yaml . This Job should run image busybox:1.31.0 and execute
+sleep 2 && echo done . It should be in namespace neptune , run a total of 3 times and should execute 2 runs in parallel.
+Start the Job and check its history. Each pod created by the Job should have the label id: awesome-job . The job should be named
+neb-new-job and the container neb-new-job-container .
+
+
+Step 1: Create namespace 
+controlplane $ k create ns neptune
+
+Step 2: Create job using imm
+controlplane $ kubectl create job neb-new-job --image=busybox:1.31.0 --namespace=neptune --dry-run=client -o yaml > 3_job.yml
+
+Step 3: 
+controlplane $ cat 3_job.yml 
+apiVersion: batch/v1
+kind: Job
+metadata:
+  creationTimestamp: null
+  name: neb-new-job
+  namespace: neptune
+spec:
+  completions: 3
+  parallelism: 2
+  template:
+    metadata:
+      creationTimestamp: null
+      labels: 
+        id: awesome-job
+    spec:
+      containers:
+      - image: busybox:1.31.0
+        name: neb-new-job-container
+        resources: {}
+        command: ["/bin/sh","-c","sleep 2 && echo done"]
+      restartPolicy: Never
+status: {}
+
+
+controlplane $ k get job -n=neptune
+NAME          COMPLETIONS   DURATION   AGE
+neb-new-job   3/3           11s        17s
+
+controlplane $ k get po -n=neptune
+NAME                READY   STATUS      RESTARTS   AGE
+neb-new-job-lnsbs   0/1     Completed   0          2m50s
+neb-new-job-ngqq6   0/1     Completed   0          2m57s
+neb-new-job-vjffv   0/1     Completed   0          2m57s
+
+
+controlplane $ k logs neb-new-job-lnsbs -n=neptune
+done

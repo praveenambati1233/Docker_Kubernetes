@@ -1,0 +1,2 @@
+#Get the YAML for one of the pods
+controlplane $ k get po nginx-8f5cc57cf-dz8cq -o yaml

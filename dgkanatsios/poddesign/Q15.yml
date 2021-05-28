@@ -1,0 +1,25 @@
+#Undo the latest rollout and verify that new pods have the old image (nginx:1.7.8)
+
+controlplane $ k get rs
+NAME               DESIRED   CURRENT   READY   AGE
+nginx-5d59d67564   2         2         2       60s
+nginx-8f5cc57cf    0         0         0       4m52s
+controlplane $ kubectl rollout undo deployment/abc
+^C
+controlplane $ kubectl rollout undo deployment/nginx
+deployment.apps/nginx rolled back
+controlplane $ k rollout status deploy nginx
+Waiting for deployment "nginx" rollout to finish : 1 old replicas are pending termination...
+deployment "nginx" successfully rolled out
+controlplane $ k rollout history deploy nginx
+deployment.apps/nginx
+REVISION  CHANGE-CAUSE
+2         <none>
+3         <none>
+
+controlplane $ k get rs
+NAME               DESIRED   CURRENT   READY   AGE
+nginx-5d59d67564   0         0         0       3m22s
+nginx-8f5cc57cf    2         2         2       7m14s
+
+

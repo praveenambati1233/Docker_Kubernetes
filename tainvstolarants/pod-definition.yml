@@ -1,0 +1,15 @@
+#Create another pod named 'bee' with the NGINX image, which has a toleration set to the taint Mortein
+#master was taint to NoSchedule $ kubectl taint nodes node01 spray=mortein:NoSchedule
+apiVersion: v1
+kind: Pod
+metadata:
+  name: bee
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+  tolerations:
+    - key: spray
+      value: mortein
+      effect: NoSchedule
+      operator: Equal

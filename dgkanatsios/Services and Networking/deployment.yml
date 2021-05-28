@@ -1,0 +1,3 @@
+#Create a deployment called foo using image 'dgkanatsios/simpleapp' (a simple server that returns hostname)
+#and 3 replicas. Label it as 'app=foo'.
+#Declare that containers in this pod will accept traffic on port 8080 (do NOT create a service yet)

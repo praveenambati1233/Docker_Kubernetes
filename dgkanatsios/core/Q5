@@ -1,0 +1,19 @@
+
+#Get the YAML for a new ResourceQuota called 'myrq' with hard limits of 1 CPU, 1G memory and 2 pods without creating it
+
+  C:\Users\praveena>kubectl create quota myrq --hard=cpu=1,memory=1G,pods=2 -o yaml
+  apiVersion: v1
+  kind: ResourceQuota
+  metadata:
+    creationTimestamp: "2020-10-31T08:11:10Z"
+    name: myrq
+    namespace: default
+    resourceVersion: "4577922"
+    selfLink: /api/v1/namespaces/default/resourcequotas/myrq
+    uid: eba514c9-e11e-4b67-b7b7-1a60e724e76a
+  spec:
+    hard:
+      cpu: "1"
+      memory: 1G
+      pods: "2"
+  status: {}

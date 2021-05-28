@@ -1,0 +1,29 @@
+controlplane $ cat 6.yml 
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: pod6
+  name: pod6
+spec:
+  containers:
+  - image: busybox:1.31.0
+    name: pod6
+    resources: {}
+    readinessProbe:
+      exec:
+        command:
+        - cat
+        - /tmp/ready
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    command: ["/bin/sh","-c","touch /tmp/ready && sleep 1d"]
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+controlplane $ k get po 
+NAME   READY   STATUS    RESTARTS   AGE
+pod6   1/1     Running   0          68s

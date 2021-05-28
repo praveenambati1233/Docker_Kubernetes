@@ -1,0 +1,34 @@
+#Create a new deployment named 'blue' with the NGINX image and 6 replicas
+#Imperative command : kubectl run blue --image=nginx --replicas=6'
+#Declartive approach as below
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: blue
+spec:
+  replicas: 6
+  selector:
+    matchLabels:
+      name: nginx-pod
+  template:
+    metadata:
+      name: nginx-app
+      labels:
+        name: nginx-pod
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+
+      #Task 1 : Set Node Affinity to the deployment to place the PODs on node01 only
+      # since we already set a blue label on node01 we can make blue deployment on blue node.
+      # command we ran before : $kubectl label node=node01 color=blue
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: color
+                    operator: In
+                    values:
+                      - blue

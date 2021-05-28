@@ -1,0 +1,46 @@
+C:\CKAD\Kubernetes\src\killer>kubectl create ns pluto
+namespace/pluto created
+
+C:\CKAD\Kubernetes\src\killer>kubectl create -f 10_pod.yml
+pod/project-plt-6cc-api created
+
+C:\CKAD\Kubernetes\src\killer>kubectl create -f 10_svc.yml
+service/project-plt-6cc-svc created
+
+C:\CKAD\Kubernetes\src\killer>kubectl get po,svc -n=pluto
+NAME                      READY   STATUS    RESTARTS   AGE
+pod/project-plt-6cc-api   1/1     Running   0          64s
+
+NAME                          TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+service/project-plt-6cc-svc   ClusterIP   10.99.22.73   <none>        3333/TCP   39s
+
+C:\CKAD\Kubernetes\src\killer>kubectl run tmp --image=nginx:alpine --rm -i --restart=Never -- curl http://project-plt-6cc-svc.pluto:3333
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+    body {
+        width: 35em;
+        margin: 0 auto;
+        font-family: Tahoma, Verdana, Arial, sans-serif;
+    }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+100   612  100   612    0     0   298k      0 --:--:-- --:--:-- --:--:--  298k
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+pod "tmp" deleted

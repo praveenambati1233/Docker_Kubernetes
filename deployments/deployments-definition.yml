@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: mywebsite
+    tier: frontend
+spec:
+  replicas: 4
+  strategy:
+    # Default = RollingUpdate
+    type:  Recreate
+  template:
+    metadata:
+      name: myapp-pod
+      # Labeling is important to refer and create new pod by replicaSet
+      labels:
+        app: myapp
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+  selector:
+    matchLabels:
+      # Refer Label from pod template
+      app: myapp

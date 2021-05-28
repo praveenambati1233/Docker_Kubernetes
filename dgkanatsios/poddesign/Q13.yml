@@ -1,0 +1,4 @@
+#Check how the deployment rollout is going
+
+controlplane $ k rollout status deploy nginx
+deployment "nginx" successfully rolled out

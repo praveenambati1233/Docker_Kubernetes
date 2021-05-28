@@ -1,0 +1,20 @@
+  apiVersion: batch/v1beta1
+  kind: CronJob
+  metadata:
+    name: throw-dice-cron-job
+  spec:
+    schedule: "30 21 * * *"
+    jobTemplate:
+      spec:
+       #Specifies the desired number of successfully finished pods the job should be run with
+       completions: 3
+       #Specifies the maximum desired number of pods the job should run at any given time. Defaults to 1
+       parallelism: 3
+       #Specifies the number of retries before marking this job failed. Defaults to 6
+       backoffLimit: 10
+       template:
+          spec:
+            containers:
+              - name: throw-dice-cron-job
+                image: kodekloud/throw-dice
+            restartPolicy: OnFailure

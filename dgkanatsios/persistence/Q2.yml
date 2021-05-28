@@ -1,0 +1,58 @@
+#Create a PersistentVolume of 10Gi, called 'myvolume'.
+#Make it have accessMode of 'ReadWriteOnce' and 'ReadWriteMany', storageClassName 'normal',
+#mounted on hostPath '/etc/foo'.
+#Save it on pv.yaml, add it to the cluster. Show the PersistentVolumes that exist on the cluster
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: myvolume
+spec:
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+    - ReadWriteMany
+  storageClassName: normal
+  hostPath:
+    path: /etc/foo
+
+
+  C:\Users\praveena>kubectl create -f pv_1.yml
+  persistentvolume/myvolume created
+
+
+
+  C:\Users\praveena>kubectl get pv
+  NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS      CLAIM   STORAGECLASS   REASON   AGE
+  myvolume   10Gi       RWO,RWX        Retain           Available           normal                  5s
+
+
+#Create a PersistentVolumeClaim for this storage class, called mypvc,
+#a request of 4Gi and an accessMode of ReadWriteOnce, with the storageClassName of normal,
+#and save it on pvc.yaml. Create it on the cluster.
+#Show the PersistentVolumeClaims of the cluster. Show the PersistentVolumes of the cluster
+
+
+  apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    name: myvolume
+  spec:
+    capacity:
+      storage: 10Gi
+    accessModes:
+      - ReadWriteOnce
+      - ReadWriteMany
+    storageClassName: normal
+    hostPath:
+      path: /etc/foo
+
+
+  C:\Users\praveena>kubectl get pvc
+  NAME    STATUS   VOLUME     CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+  mypvc   Bound    myvolume   10Gi       RWO,RWX        normal         5s
+
+  C:\Users\praveena>kubectl get pv
+  NAME       CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM           STORAGECLASS   REASON   AGE
+  myvolume   10Gi       RWO,RWX        Retain           Bound    default/mypvc   normal                  10m

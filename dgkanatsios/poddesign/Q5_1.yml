@@ -1,0 +1,5 @@
+#Get only the 'app=v2' pods
+
+C:\Users\praveena>kubectl get po --selector="app=v2" --show-labels
+NAME     READY   STATUS    RESTARTS   AGE   LABELS
+nginx2   1/1     Running   0          20m   app=v2

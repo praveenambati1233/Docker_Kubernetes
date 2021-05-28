@@ -1,0 +1,8 @@
+#Create a busybox pod with 'sleep 3600' as arguments.
+#Copy '/etc/passwd' from the pod to your local folder
+
+C:\Users\praveena>kubectl run busybox2 --image=busybox -- sleep 3600
+pod/busybox2 created
+
+C:\Users\praveena>kubectl cp busybox2:etc/passwd ./passwd
+

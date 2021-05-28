@@ -1,0 +1,66 @@
+1. switch the context to docker-for-desktop
+2. Create service account ( token.yaml )
+2.1 create ui.yaml
+3. enable proxy to access the UI
+4. open k8s UI
+5. choose the token based login. Token can be get secrets
+
+
+logs :
+
+1
+kubectl config use-context docker-for-desktop
+
+2
+C:\Users\praveena\Desktop\mS_Process\kubernates_deployment>kubectl apply -f token.yaml
+serviceaccount/admin-user created
+
+2.1
+C:\Users\praveena\Desktop\mS_Process\kubernates_deployment>kubectl apply -f ui.yaml
+namespace/kubernetes-dashboard created
+serviceaccount/kubernetes-dashboard created
+service/kubernetes-dashboard created
+secret/kubernetes-dashboard-certs created
+secret/kubernetes-dashboard-csrf created
+secret/kubernetes-dashboard-key-holder created
+configmap/kubernetes-dashboard-settings created
+role.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrole.rbac.authorization.k8s.io/kubernetes-dashboard created
+rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+clusterrolebinding.rbac.authorization.k8s.io/kubernetes-dashboard created
+deployment.apps/kubernetes-dashboard created
+service/dashboard-metrics-scraper created
+deployment.apps/kubernetes-metrics-scraper created
+
+3
+C:\Users\praveena\Desktop\mS_Process\kubernates_deployment>kubectl proxy
+ Starting to serve on 127.0.0.1:8001
+
+4
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/overview?namespace=default
+
+5
+C:\Users\praveena>kubectl get secrets
+NAME                       TYPE                                  DATA   AGE
+dashboard-sa-token-qw6sd   kubernetes.io/service-account-token   3      3d1h
+default-token-dnm9g        kubernetes.io/service-account-token   3      7d18h
+
+C:\Users\praveena>kubectl describe secret dashboard-sa-token-qw6sd
+Name:         dashboard-sa-token-qw6sd
+Namespace:    default
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: dashboard-sa
+              kubernetes.io/service-account.uid: 1619859a-54bb-4f84-8a63-7123a27b4ebc
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6IiJ9.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRhc2hib2FyZC1zYS10b2tlbi1xdzZzZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkYXNoYm9hcmQtc2EiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIxNjE5ODU5YS01NGJiLTRmODQtOGE2My03MTIzYTI3YjRlYmMiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkYXNoYm9hcmQtc2EifQ.YLdtUwOABU4nas1rgjLIuH4GP_XmXybk1oZl1e2M8EtF_EhSIt8HS7-RdY6mnV0e2cqcExK-s9RvNyNPSM9Sl_yPKZm96HGoXN2ZOhPrU_9MHvsbK9dVdxyq6yrevQBOFZefZLbi2fkOlMElGczn7i3XkATBx_fxWc25MMcXMK9ez15hZDsvq5LZQcw3cpbWQ2qgt_9ybR8RM5hs6-8jsgPZROQtY-kUDDDSzEGCtCbspOnCyl_h7rCLJ4lea6FsC2T8VizNGCAKUAkWJfEAV-YtxCRkm2HCWRJLpl0P6gnBs2Iw9fjsJfKq9pc_4_xGeOQAlag5EYZJGxjRAiu2tg
+ca.crt:     1025 bytes
+namespace:  7 bytes
+
+
+
+
+Replace rolebinding.rbac.authorization.k8s.io/kubernetes-dashboard configuration in ui.yaml

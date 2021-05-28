@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: hello-pod
+  labels:
+    type: pod
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      args: ["sleep","100"]
+  serviceAccountName: dashboard-sa
+

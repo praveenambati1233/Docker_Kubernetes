@@ -1,4 +1,3 @@
-
 | sno  |  Topics  |
 | ------------ | ------------ |
 |  1  |  [YAML Examples](#YAML) |
@@ -7,7 +6,7 @@
 
 
 **Exam curriculum**
-- https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/
+- https://github.com/cncf/curriculum/blob/master/CKAD_Curriculum_V1.18.pdf
 
 **Exam environment**
 - https://training.linuxfoundation.org/wp-content/uploads/2020/04/Important-Tips-CKA-CKAD-April2020.pdf
@@ -15,17 +14,6 @@
 **Useful URLs for exam** 
 - https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
 - https://cheatsheet.dennyzhang.com/cheatsheet-kubernetes-a4
-
-**Exam preparation**
-- https://dev.to/vijaydaswani/ckad-exam-practice-exercise-configuration-5gda
-
-
-overview :
-
-Kubernetes Concepts - https://kubernetes.io/docs/concepts/
-
-
-
 
 `docker run` command is used to run a container from an image.
 
@@ -41,19 +29,12 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 
 `docker ps`   running containers 
 
-`docker ps -a`  both running and non-running containers
-
-`docker logs -f <cntainer_id>` 
+`docker ps -a`  both running and non-running containers 
 
 
 `docker run -it image-name` Run in intractive mode and detached 
 
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
-
-
-**Kubernetes commands:**
-
-
 
 edit the deployment `kubectl edit deployment.v1.apps/web-dashboard` 
 
@@ -72,7 +53,7 @@ Get Deployments on particular namespace `kubectl get deployment  --namespace=app
 
 Get Pods on particular namespace `kubectl get pods --namespace=app-space`
 
-Get services on particular namespace `kubectl get services  --namespace=app-space`
+Get Pods on particular namespace `kubectl get services  --namespace=app-space`
 
 To get all the resouces `kubectl get all --all-namespaces`
 
@@ -86,9 +67,6 @@ Get the pod in yaml file `kubectl get po webapp-color -o yaml > web.yml`
 
 Deployment `kubectl run nginx --image=nginx`
 
-New way
-`kubectl create <image_name> --image=nginx --dry-run=client -o yaml > deployment.yaml`
-
 Pod `kubectl run nginx --image=nginx --restart=Never`
 
 Job `kubectl run busybox --image=busybox --restart=OnFailure`
@@ -98,17 +76,6 @@ CronJob `kubectl run busybox --image=busybox --schedule="* * * * *"  --restart=O
 create a service that exposes deployment on port 8080, target port with type nodePort `kubectl expose deploy simple-webapp-deployment  --port=8080 --target-port=8000  --name=webapp-service --dry-run -o yaml > service.yml` edit and add type: Node under spec
 
 Better query `kubectl expose deployment -n ingress-space ingress-controller --type=NodePort --port=80 --name=ingress --dry-run -o yaml >ingress.yaml`
-
-
-Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379
-
-`kubectl expose pod  redis --port=6379 --name redis-service --dry-run=client -o yaml`
-
-Create a Service named nginx of type NodePort to expose pod nginx's port 80 on port 30080 on the nodes:
-
-`kubect expose pod nginx --port=80 --name=nginx-service --dry=run=client -o yaml`
-
-(This will automatically use the pod's labels as selectors, but you cannot specify the node port. You have to generate a definition file and then add the node port in manually before creating the service with the pod.)
 
 
 
@@ -312,7 +279,7 @@ all about describe
 `kubectl describe  pod <pod-name>`
 `kubectl describe  replicaset <replicaset-name>`
 
-Pod Grace delete `kubectl delete po pod-name --grace-period=0 --force`
+
 
 Create a new Deployment with the below attributes using your own deployment definition file
 Name: httpd-frontend; Replicas: 3; Image: httpd:2.4-alpine
@@ -651,7 +618,7 @@ To summarize, in any case whether it be a single pod on a single node, multiple 
 
 > CMD : The command line parameters passed will get replaced entirely.
 >ENTRYPOINT : The command line parameters will get appended.
-          EntryPoint is command instruction as in, we can specify the program that will be run when the container starts 
+
 **usecase:**
 
 `$docker run ubuntu --image=ubuntu`
@@ -1009,14 +976,6 @@ $ kubectl get all --selector env= prod'
 $ kubectl get po --selector env=prod,bu=finance,tier=frontend'
 ```
 
-**Create a label to  a pod**
-
-`kubectl run pod1 --image=nginx --labels key=value`
-
-**Get the all label**
-
-`kubectl get all -A --show-labels`  
-
 **overwrite the label**
 
 `$ kubectl label po db-1-5lj5n env=prod --overwrite`
@@ -1024,8 +983,6 @@ $ kubectl get po --selector env=prod,bu=finance,tier=frontend'
 **Get the the label**
 
 `$ kubectl get po -L <labelname>`
-
-
 
 ```shell
 master $ kubectl get po -L env
@@ -1049,87 +1006,11 @@ db-1-xfb8f    1/1     Running   0          7m3s    dev
 
 `kubectl label  po pod-name labels=app1=ver1
 
-**Add label to the exiting node**
-
-`kubectl label nodes node-name labelkey=labelvalue`
-
-**Delete the label on the pod**
-
-`kubectl label po pod-name label-key -`
-
-
-**Tasks**
-
-1. We have deployed a number of PODs. They are labelled with tier, env and bu. How many PODs exist in the dev environment?
-
-```
-root@controlplane:~# k get po --show-labels
-NAME          READY   STATUS    RESTARTS   AGE   LABELS
-app-1-8lgxp   1/1     Running   0          35m   bu=finance,env=dev,tier=frontend
-app-1-kdtpr   1/1     Running   0          35m   bu=finance,env=dev,tier=frontend
-app-1-zpwzc   1/1     Running   0          35m   bu=finance,env=dev,tier=frontend
-app-1-zzxdf   1/1     Running   0          35m   bu=finance,env=prod,tier=frontend
-app-2-p4zdv   1/1     Running   0          35m   env=prod,tier=frontend
-auth          1/1     Running   0          35m   bu=finance,env=prod
-db-1-669pd    1/1     Running   0          35m   env=dev,tier=db
-db-1-bgd5b    1/1     Running   0          35m   env=dev,tier=db
-db-1-m72rx    1/1     Running   0          35m   env=dev,tier=db
-db-1-nkbpw    1/1     Running   0          35m   env=dev,tier=db
-db-2-x6r5z    1/1     Running   0          35m   bu=finance,env=prod,tier=db
-
-```
-
-```
-root@controlplane:~# k get po --selector env=dev --no-headers        
-app-1-8lgxp   1/1   Running   0     47m
-app-1-kdtpr   1/1   Running   0     47m
-app-1-zpwzc   1/1   Running   0     47m
-db-1-669pd    1/1   Running   0     47m
-db-1-bgd5b    1/1   Running   0     47m
-db-1-m72rx    1/1   Running   0     47m
-db-1-nkbpw    1/1   Running   0     47m
-
-```
-
-
-2.  How many objects are in the prod environment including PODs, ReplicaSets and any other objects?
-
-```
-root@controlplane:~# k get all --selector env=prod --no-headers | wc -l
-7
-
-```
-
-3. Issue in below ReplicaSet definition
-
-```
-apiVersion: apps/v1
-kind: ReplicaSet
-metadata:
-   name: replicaset-1
-spec:
-   replicas: 2
-   selector:
-      matchLabels:
-        tier: frontend
-   template:
-     metadata:
-       labels:
-        tier: nginx
-     spec:
-       containers:
-       - name: nginx
-         image: nginx
-
-```
-
-solution : match the tier label with frontend in the template. ( tier: frontend )
-
-
-Rest of the tasks are at `Kubernetes\src\dgkanatsios\poddesign`
 
 
 # PV and PVC
+
+
 
 pv.yml
 

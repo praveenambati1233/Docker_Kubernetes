@@ -1,0 +1,38 @@
+$kubectl create ns my-services
+$kubectl run nginx --image=nginx --dry-run=client --port=80 --expose -o yaml -n my-services> po.yml
+
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  name: nginx
+  namespace: my-services
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 80
+  selector:
+    run: nginx
+status:
+  loadBalancer: {}
+---
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  namespace: my-services
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      ports:
+        - containerPort: 80
+      resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}

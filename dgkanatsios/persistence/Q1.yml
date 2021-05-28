@@ -1,0 +1,47 @@
+#Create busybox pod with two containers,
+#each one will have the image busybox and will run the 'sleep 3600' command.
+#Make both containers mount an emptyDir at '/etc/foo'.
+#Connect to the second busybox, write the first column of '/etc/passwd' file to '/etc/foo/passwd'.
+#Connect to the first busybox and write '/etc/foo/passwd' file to standard output. Delete pod.
+
+step 1 :
+C:\Users\praveena>kubectl run busybox --image=busybox --restart=Never --dry-run=client -- /bin/sh -c 'sleep 3600' -o yaml >pod.yml
+
+step 2 : Add new new container within the containers and mount the directory to volume
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: busybox
+  name: busybox
+spec:
+  containers:
+    - args:
+        - /bin/sh
+        - -c
+        - 'sleep 3600'
+      image: busybox
+      name: busybox
+      volumeMounts:
+        - mountPath: /etc/foo
+          name: log
+    - args:
+        - /bin/sh
+        - -c
+        - 'sleep 3600'
+      image: busybox
+      name: busybox1
+      volumeMounts:
+        - mountPath: /etc/foo
+          name: log
+  restartPolicy: Never
+  volumes:
+    - name: log
+      emptyDir: {}
+
+step 3:
+
+C:\Users\praveena>kubectl exec -it busybox -c busybox -- sh
+

@@ -1,0 +1,8 @@
+#Change pod's image to nginx:1.7.1. Observe that the container will be restarted as soon as the image gets pulled
+
+
+
+controlplane $ k set image po/nginx nginx=nginx:1.7.1
+controlplane $ k get po nginx -w
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   2          11m

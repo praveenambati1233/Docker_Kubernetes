@@ -1,0 +1,9 @@
+root@controlplane:~# k run pod1 --image=httpd:2.4.41-alpine  $dr > 2.yml
+root@controlplane:~# vi 2.yml 
+root@controlplane:~# k create -f 2.yml 
+pod/pod1 created
+root@controlplane:~# k get po
+NAME   READY   STATUS    RESTARTS   AGE
+pod1   1/1     Running   0          4m42s
+root@controlplane:~# sh pod.sh 
+Status:       Running

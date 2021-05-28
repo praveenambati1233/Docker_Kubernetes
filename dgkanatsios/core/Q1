@@ -1,0 +1,31 @@
+#Create a namespace called 'mynamespace' and a pod with image nginx called nginx on this namespace
+
+
+controlplane $ kubectl create namespace mynamespace
+controlplane $ kubectl run nginx --image=nginx -n mynamespace --dry-run=client -o yaml >pod.yml
+
+controlplane $ cat pod.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: null
+  labels:
+    run: nginx
+  name: nginx
+  namespace: mynamespace
+spec:
+  containers:
+    - image: nginx
+      name: nginx
+      resources: {}
+  dnsPolicy: ClusterFirst
+  restartPolicy: Always
+status: {}
+
+
+controlplane $ k create -f pod.yml
+pod/nginx created
+
+controlplane $ k get po -n mynamespace
+NAME    READY   STATUS    RESTARTS   AGE
+nginx   1/1     Running   0          16s

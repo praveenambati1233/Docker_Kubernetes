@@ -1,0 +1,18 @@
+
+
+#Below commands executed at the time of container creation
+#Args:
+#  sleep
+#  5000
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-2
+spec:
+  containers:
+    - name: ubuntu
+      image: ubuntu
+      #sleep for 5 seconds
+      command: ["sleep","5000"]
+

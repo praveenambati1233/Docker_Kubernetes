@@ -1,0 +1,18 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: throw-dice-cron-job
+spec:
+  schedule: "30 21 * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: throw-dice-job
+              image: kodekloud/throw-dice
+                #job pod should execute only onces
+          restartPolicy: Never
+      completions: 3
+      parallelism: 3
+      backoffLimit: 20

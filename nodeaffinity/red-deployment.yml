@@ -1,0 +1,34 @@
+#Create a new deployment named 'red' with the NGINX image and 3 replicas,
+# and ensure it gets placed on the master node only.
+
+# since it is master node we need to use the predefined : label (node-role.kubernetes.io/master=)
+# $kubectl get nodes --show-labels
+# NAME     STATUS   ROLES    AGE   VERSION   LABELS
+#master   Ready    master   14m   v1.16.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,kubernetes.io/arch=amd64,kubernetes.io/hostname=master,kubernetes.io/os=linux,node-role.kubernetes.io/master=
+#node01   Ready    <none>   13m   v1.16.0   beta.kubernetes.io/arch=amd64,beta.kubernetes.io/os=linux,color=blue,kubernetes.io/arch=amd64,kubernetes.io/hostname=node01,kubernetes.io/os=linux
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: red
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      name: nginx-pod-red
+  template:
+    metadata:
+      name: nginx-app
+      labels:
+        name: nginx-pod-red
+    spec:
+      containers:
+        - name: nginx
+          image: nginx
+      affinity:
+        nodeAffinity:
+         requiredDuringSchedulingIgnoredDuringExecution:
+           nodeSelectorTerms:
+             - matchExpressions:
+                 - key: node-role.kubernetes.io/master
+                   operator: Exists

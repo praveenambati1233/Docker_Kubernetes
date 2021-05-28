@@ -1,0 +1,45 @@
+Ingress
+
+https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+An API object that manages external access to the services in a cluster, typically HTTP.
+Ingress may provide load balancing, SSL termination and name-based virtual hosting.
+
+
+master $ kubectl get ingress --all-namespaces
+NAMESPACE        NAME                 HOSTS   ADDRESS   PORTS   AGE
+app-space        ingress-wear-watch   *                 80      56m
+critical-space   pay-ingress          *                 80      105s
+
+master $ kubectl delete ingress pay-ingress --namespace=critical-space
+ingress.extensions "pay-ingress" deleted
+
+master $ kubectl describe ingress --namespace app-space
+Name:             ingress-wear-watch
+Namespace:        app-space
+Address:
+Default backend:  default-http-backend:80 (<none>)
+Rules:
+  Host  Path  Backends
+  ----  ----  --------
+  *
+        /wear     wear-service:8080 (10.88.0.4:8080)
+        /stream   video-service:8080 (10.88.0.5:8080)
+        /eat      food-service:8080 (10.44.0.1:8080)
+Annotations:
+  nginx.ingress.kubernetes.io/rewrite-target:  /
+  nginx.ingress.kubernetes.io/ssl-redirect:    false
+Events:
+  Type    Reason  Age                From                      Message
+  ----    ------  ----               ----                      -------
+  Normal  CREATE  57m                nginx-ingress-controller  Ingress app-space/ingress-wear-watch
+  Normal  UPDATE  33m (x3 over 57m)  nginx-ingress-controller  Ingress app-space/ingress-wear-watch
+
+
+
+
+Task:
+
+Ingress exposes HTTP and HTTPS routes from outside the cluster to services within the cluster. Traffic routing is controlled by rules defined on the Ingress resource.
+
+

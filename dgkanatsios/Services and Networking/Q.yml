@@ -1,0 +1,91 @@
+#Create an nginx deployment of 2 replicas, expose it via a ClusterIP service on port 80. Create a NetworkPolicy so that only pods with labels 'access: granted' can access the deployment and apply it
+k create deploy nginx --image=nginx --replicas=2  --dry-run=client -o yaml > nginx_deploy.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: nginx
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - image: nginx
+        name: nginx
+        resources: {}
+status: {}
+
+controlplane $ k create deploy nginx --image=nginx --replicas=2  --dry-run=client -o yaml > nginx_deploy.yml
+controlplane $ k create -f nginx_deploy.yml
+deployment.apps/nginx created
+controlplane $ k expose deploy nginx --port=80 --dry-run=client -o yaml > nginx_svc.yml
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    app: nginx
+  name: nginx
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: nginx
+status:
+  loadBalancer: {}
+controlplane $ k create -f nginx_svc.yml
+service/nginx created
+controlplane $ k get po --show-labels
+NAME                     READY   STATUS    RESTARTS   AGE   LABELS
+nginx-6799fc88d8-kxztt   1/1     Running   0          60s   app=nginx,pod-template-hash=6799fc88d8
+nginx-6799fc88d8-wh4f5   1/1     Running   0          60s   app=nginx,pod-template-hash=6799fc88d8
+controlplane $ vi netpol.yml
+controlplane $ k run busybox --image=busybox --rm -it -- wget -O- http://nginx:80 --timeout 2
+# If you don't see a command prompt, try pressing enter.
+# wget: download timed out
+# Session ended, resume using 'kubectl attach busybox -c busybox -i -t' command when the pod is running
+# pod "busybox" deleted
+controlplane $ k run busybox --image=busybox --labels=access=granted --rm -it -- wget  -O- http://nginx:80 --timeout 2
+# If you don't see a command prompt, try pressing enter.
+# writing to stdout
+# <!DOCTYPE html>
+# <html>
+# <head>
+# <title>Welcome to nginx!</title>
+# <style>
+#     body {
+#         width: 35em;
+#         margin: 0 auto;
+#         font-family: Tahoma, Verdana, Arial, sans-serif;
+#     }
+# </style>
+# </head>
+# <body>
+# <h1>Welcome to nginx!</h1>
+# <p>If you see this page, the nginx web server is successfully installed and
+# working. Further configuration is required.</p>
+
+# <p>For online documentation and support please refer to
+# <a href="http://nginx.org/">nginx.org</a>.<br/>
+# Commercial support is available at
+# <a href="http://nginx.com/">nginx.com</a>.</p>
+
+# <p><em>Thank you for using nginx.</em></p>
+# </body>
+# </html>
+# -                    100% |*************************************************************************************************************|   612  0:00:00 ETA
+# written to stdout
+# Session ended, resume using 'kubectl attach busybox -c busybox -i -t' command when the pod is running
+# pod "busybox" deleted

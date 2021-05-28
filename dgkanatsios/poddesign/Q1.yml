@@ -1,0 +1,22 @@
+#Create 3 pods with names nginx1,nginx2,nginx3. All of them should have the label app=v1
+
+
+C:\Users\praveena>kubectl run nginx1 --image=nginx --labels="app=v1"
+pod/nginx1 created
+
+C:\Users\praveena>kubectl run nginx2 --image=nginx --labels="app=v1"
+pod/nginx2 created
+
+C:\Users\praveena>kubectl run nginx3 --image=nginx --labels="app=v1"
+pod/nginx3 created
+
+C:\Users\praveena>kubectl get po
+NAME     READY   STATUS    RESTARTS   AGE
+nginx1   1/1     Running   0          4m26s
+nginx2   1/1     Running   0          4m15s
+nginx3   1/1     Running   0          4m11s
+
+
+#Advance commands 
+
+C:\CKAD\localPratice>kubectl run nginx3 --image=nginx --labels=app=v3  -n=pod-design --dry-run=client  -o yaml > podwithlabel3.yml

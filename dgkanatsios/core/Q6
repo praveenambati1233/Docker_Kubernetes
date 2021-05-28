@@ -1,0 +1,16 @@
+#Get pods on all namespaces
+
+
+controlplane $ k get po -A
+NAMESPACE     NAME                                   READY   STATUS              RESTARTS   AGE
+kube-system   coredns-f9fd979d6-lbjx6                1/1     Running             0          12m
+kube-system   coredns-f9fd979d6-sc52l                1/1     Running             0          12m
+kube-system   etcd-controlplane                      1/1     Running             0          12m
+kube-system   kube-apiserver-controlplane            1/1     Running             0          12m
+kube-system   kube-controller-manager-controlplane   1/1     Running             0          12m
+kube-system   kube-flannel-ds-amd64-9b6mz            1/1     Running             0          12m
+kube-system   kube-flannel-ds-amd64-zxc8r            1/1     Running             0          12m
+kube-system   kube-proxy-8dvz4                       1/1     Running             0          12m
+kube-system   kube-proxy-9nhd4                       1/1     Running             0          12m
+kube-system   kube-scheduler-controlplane            1/1     Running             0          12m
+mynamespace   po                                     0/1     ContainerCreating   0          6s

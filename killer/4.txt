@@ -1,0 +1,11 @@
+root@controlplane:~# k create ns neptune
+namespace/neptune created
+root@controlplane:~# k create sa  neptune-sa-v2 -n=neptune
+serviceaccount/neptune-sa-v2 created
+root@controlplane:~# k create -f 4.yml 
+deployment.apps/neptune-10ab created
+root@controlplane:~# kubectl set resources deployment neptune-10ab --limits=memory=50Mi --requests=memory=20Mi -n=neptune
+deployment.apps/neptune-10ab resource requirements updated
+root@controlplane:~# k get deploy -n=neptune
+NAME           READY   UP-TO-DATE   AVAILABLE   AGE
+neptune-10ab   3/3     3            3           102s

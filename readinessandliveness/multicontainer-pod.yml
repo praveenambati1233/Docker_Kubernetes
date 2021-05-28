@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multiweb-app-1
+spec:
+  containers:
+    - name: simple-webapp-1
+      image: kodekloud/webapp-delayed-start
+      livenessProbe:
+        httpGet:
+          port: 8080
+          path: /live
+        periodSeconds: 1
+        initialDelaySeconds: 80
+    - name: simple-webapp-2
+      image: kodekloud/webapp-delayed-start
+      readinessProbe:
+         httpGet:
+           port: 8080
+           path: /ready
+      livenessProbe:
+          httpGet:
+            port: 8080
+            path: /live
+          periodSeconds: 1
+          initialDelaySeconds: 80

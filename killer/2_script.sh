@@ -1,0 +1,1 @@
+kubectl describe po pod1 | grep -i Status:

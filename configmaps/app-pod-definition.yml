@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-app
+spec:
+  - containers:
+      - name: my-pod
+        image: my-image
+        ports:
+          - containerPort: 8080
+        env:
+          - name: app-config
+        envFrom:
+          - configMapRef:
+              #name from app-pod-definition.yml file
+              name: app-config

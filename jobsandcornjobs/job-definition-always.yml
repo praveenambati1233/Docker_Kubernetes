@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: throw-dice-job
+spec:
+  completions: 1
+  parallelism: 3
+  backoffLimit: 20
+  template:
+    spec:
+      containers:
+        - name: throw-dice-job
+          image: kodekloud/throw-dice
+      #job pod should execute only onces
+      restartPolicy: OnFailure

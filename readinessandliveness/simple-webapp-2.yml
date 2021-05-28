@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-2
+spec:
+  containers:
+    - name: simple-webapp-2
+      image: kodekloud/webapp-delayed-start
+      ports:
+        - containerPort: 8080
+      readinessProbe:
+       httpGet:
+        # container port and redinessport has to be same
+        port: 8080
+        path: /ready
+       initialDelaySeconds: 10
+       periodSeconds: 5
+       failureThreshold: 3
+      livenessProbe:
+        httpGet:
+          # container port and redinessport has to be same
+          port: 8080
+          path: /live
+        periodSeconds: 1
+        initialDelaySeconds: 80

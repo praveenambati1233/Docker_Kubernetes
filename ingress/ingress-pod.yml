@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+  creationTimestamp: "2020-05-15T14:17:52Z"
+  generation: 2
+  name: ingress-wear-watch
+  namespace: app-space
+  resourceVersion: "1661"
+  selfLink: /apis/extensions/v1beta1/namespaces/app-space/ingresses/ingress-wear-watch
+  uid: a0736040-b29a-4271-b6ab-0d7bd7135c17
+spec:
+  rules:
+    - http:
+        paths:
+          - backend:
+              serviceName: wear-service
+              servicePort: 8080
+            path: /wear
+          - backend:
+              serviceName: video-service
+              servicePort: 8080
+            path: /stream
+          - backend:
+              serviceName: food-service
+              servicePort: 8080
+            pathType: /eat
+status:
+  loadBalancer:
+    ingress:
+      - {}

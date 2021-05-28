@@ -1,0 +1,9 @@
+#Execute a simple shell on the nginx pod
+
+kubectl exec -it nginx -- /bin/sh
+
+#Create a busybox pod that echoes 'hello world' and then exits
+
+kubectl run busybox --image=busybox -it --restart=Never -- echo 'hello world'
+  # or
+kubectl run busybox --image=busybox -it --restart=Never -- /bin/sh -c 'echo hello world'
