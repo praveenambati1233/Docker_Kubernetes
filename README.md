@@ -54,9 +54,11 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 `docker logs -f <cntainer_id>` 
 
 
-`docker run -it image-name` Run in intractive mode and detached 
+`docker run -it image-name` runs in intractive mode and detached 
 
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
+
+`docker exec image_name < command >` image in execute mode
 
 
 **Kubernetes commands:**
