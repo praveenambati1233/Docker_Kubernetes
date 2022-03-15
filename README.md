@@ -35,11 +35,9 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 
 
 
-`docker run` command is used to run a container from an image.
+`docker run -d --name webapp image-name` check in local, if not present, pull from docker humber and runs the container 
 
 `docker ps `  list containers 
-
-`docker run image-name` check in local, if not present, pull from docker humber and runs the container 
 
 `docker pull image-name ` pulls the image 
 
@@ -59,6 +57,10 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
 
 `docker exec image_name < command >` image in execute mode
+
+`docker run -v /your/mount:/var/lib/mysql mysql` mounts the /opt/datadir mount to container's path
+
+`docker inspect container_name/id` detailed mode
 
 
 **Kubernetes commands:**
