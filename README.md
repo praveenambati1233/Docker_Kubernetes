@@ -62,6 +62,16 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 
 `docker inspect container_name/id` detailed mode
 
+**Examples**
+
+Run a container named blue-app using image kodekloud/simple-webapp and set the environment variable APP_COLOR to blue. Make the application available on port 38282 on the host. The application listens on port 8080.
+
+`docker run -d -p 38282:8080 -e APP_COLOR=blue --name blue-app kodekloud/simple-webapp`
+
+`docker ps` -- get the container id
+
+`docker exec -it bdfbd330636f /bin/sh` -- open container in interactive mode using shell
+
 
 **Kubernetes commands:**
 
