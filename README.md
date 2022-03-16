@@ -58,7 +58,16 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 
 `docker exec image_name < command >` image in execute mode
 
-`docker run -v /your/mount:/var/lib/mysql mysql` mounts the /opt/datadir mount to container's path
+
+`docker volume create data_volume`
+
+`docker run -v /your/mount:/var/lib/mysql mysql` mounts the /opt/datadir mount to container's path (old way )
+
+`docker run --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql` ( new way - more verbose )
+
+`docker run -v /opt/data:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql`
+
+
 
 `docker inspect container_name/id` detailed mode
 
