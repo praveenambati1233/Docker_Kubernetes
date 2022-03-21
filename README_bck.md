@@ -36,6 +36,9 @@
 
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
 
+
+
+
 edit the deployment `kubectl edit deployment.v1.apps/web-dashboard` 
 
 setting the namespace `kubectl config set-context --current --namespace=<insert-namespace-name-here>` 

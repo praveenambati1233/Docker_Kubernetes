@@ -28,16 +28,16 @@ overview :
 
 Kubernetes Concepts - <https://kubernetes.io/docs/concepts/>
 
-Docker :
+# Docker
 
-**Docker is a platform that utilizes OS-level virtual software, to help users to develop, deploy, manage, and run applications in a Docker Container with all their library dependencies.**
-
-
-**Docker Container is a standalone package that includes all the dependencies (frameworks, libraries, etc.) required to execute an application.**
+Docker is a platform that utilizes OS-level virtual software, to help users to develop, deploy, manage, and run applications in a Docker Container with all their library dependencies.
 
 
+Docker Container is a standalone package that includes all the dependencies (frameworks, libraries, etc.) required to execute an application.
 
 
+
+Most commanly used docer commands 
 
 `docker run -d --name webapp image-name` check in local, if not present, pull from docker humber and runs the container
 
@@ -72,6 +72,8 @@ Docker :
 `docker run -v /opt/data:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql`
 
 `docker inspect container_name/id` detailed mode
+
+`docker run --cpus=.5 ubuntu` & `docker run --memory=100m ubuntu`
 
 **Examples**
 
