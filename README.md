@@ -1,11 +1,5 @@
 
-
-
-
-
-Hope you are doing staying safe :) 
-
-
+Hope you are doing staying safe :)
 
 | sno  |  Topics  |
 | ------------ | ------------ |
@@ -13,51 +7,61 @@ Hope you are doing staying safe :)
 |  2  |  [Optimize Docker Files](#Optimize-Docker-Files)  |
 | 3 | [Creating pod using YAML](#Creating-pod-using-YAML) |
 
-
 **Exam curriculum**
-- https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/
+
+- <https://training.linuxfoundation.org/certification/certified-kubernetes-application-developer-ckad/>
 
 **Exam environment**
-- https://training.linuxfoundation.org/wp-content/uploads/2020/04/Important-Tips-CKA-CKAD-April2020.pdf
 
-**Useful URLs for exam** 
-- https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands
-- https://cheatsheet.dennyzhang.com/cheatsheet-kubernetes-a4
+- <https://training.linuxfoundation.org/wp-content/uploads/2020/04/Important-Tips-CKA-CKAD-April2020.pdf>
 
-**Exam preparation**
-- https://dev.to/vijaydaswani/ckad-exam-practice-exercise-configuration-5gda
+**Useful URLs for exam**
 
+- <https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands>
+- <https://cheatsheet.dennyzhang.com/cheatsheet-kubernetes-a4>
+
+# Exam preparation
+
+- <https://dev.to/vijaydaswani/ckad-exam-practice-exercise-configuration-5gda>
 
 overview :
 
-Kubernetes Concepts - https://kubernetes.io/docs/concepts/
+Kubernetes Concepts - <https://kubernetes.io/docs/concepts/>
+
+Docker :
+
+**Docker is a platform that utilizes OS-level virtual software, to help users to develop, deploy, manage, and run applications in a Docker Container with all their library dependencies.**
+
+
+**Docker Container is a standalone package that includes all the dependencies (frameworks, libraries, etc.) required to execute an application.**
 
 
 
 
-`docker run -d --name webapp image-name` check in local, if not present, pull from docker humber and runs the container 
 
-`docker ps `  list containers 
+`docker run -d --name webapp image-name` check in local, if not present, pull from docker humber and runs the container
 
-`docker pull image-name ` pulls the image 
+`docker ps`  list containers
 
-`docker rm container-id ` remove running container 
+`docker pull image-name` pulls the image
 
-`docker rmi image-name`  remove image 
+`docker rm container-id` remove running container
 
-`docker ps`   running containers 
+`docker rmi $(docker images -aq)` remove all images
+
+`docker rmi image-name`  remove image
+
+`docker ps`   running containers
 
 `docker ps -a`  both running and non-running containers
 
-`docker logs -f <cntainer_id>` 
+`docker logs -f <cntainer_id>`
 
-
-`docker run -it image-name` runs in intractive mode and detached 
+`docker run -it image-name` runs in intractive mode and detached
 
 `docker build . -t voting-app` runs DockerFile in the current directory with tag: *voting-app*
 
 `docker exec image_name < command >` image in execute mode
-
 
 `docker volume create data_volume`
 
@@ -66,8 +70,6 @@ Kubernetes Concepts - https://kubernetes.io/docs/concepts/
 `docker run --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql` ( new way - more verbose )
 
 `docker run -v /opt/data:/var/lib/mysql -d --name mysql-db -e MYSQL_ROOT_PASSWORD=db_pass123 mysql`
-
-
 
 `docker inspect container_name/id` detailed mode
 
@@ -81,19 +83,15 @@ Run a container named blue-app using image kodekloud/simple-webapp and set the e
 
 `docker exec -it bdfbd330636f /bin/sh` -- open container in interactive mode using shell
 
-
 **Kubernetes commands:**
 
+edit the deployment `kubectl edit deployment.v1.apps/web-dashboard`
 
-
-edit the deployment `kubectl edit deployment.v1.apps/web-dashboard` 
-
-setting the namespace `kubectl config set-context --current --namespace=<insert-namespace-name-here>` 
+setting the namespace `kubectl config set-context --current --namespace=<insert-namespace-name-here>`
 
 list of images in a pod `kubectl get pods my-app-976b6864f-5mchm -o=jsonpath="{..image}"` [basically this commands return pulled image and latest image, not sure why ? ]
 
-more : https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod
-
+more : <https://kubernetes.io/docs/tasks/access-application-cluster/list-all-running-container-images/#list-container-images-by-pod>
 
 scale the pod `kubectl scale -n default replicaset my-app-976b6864f --replicas=3`
 
@@ -114,7 +112,6 @@ k run ubuntu-sleeper-2 --image=ubuntu --restart=Never --command "sleep" "5000"
 
 Get the pod in yaml file `kubectl get po webapp-color -o yaml > web.yml`
 
-
 Deployment `kubectl run nginx --image=nginx`
 
 New way
@@ -124,12 +121,11 @@ Pod `kubectl run nginx --image=nginx --restart=Never`
 
 Job `kubectl run busybox --image=busybox --restart=OnFailure`
 
-CronJob `kubectl run busybox --image=busybox --schedule="* * * * *"  --restart=OnFailure `
+CronJob `kubectl run busybox --image=busybox --schedule="* * * * *"  --restart=OnFailure`
 
 create a service that exposes deployment on port 8080, target port with type nodePort `kubectl expose deploy simple-webapp-deployment  --port=8080 --target-port=8000  --name=webapp-service --dry-run -o yaml > service.yml` edit and add type: Node under spec
 
 Better query `kubectl expose deployment -n ingress-space ingress-controller --type=NodePort --port=80 --name=ingress --dry-run -o yaml >ingress.yaml`
-
 
 Create a Service named redis-service of type ClusterIP to expose pod redis on port 6379
 
@@ -141,20 +137,11 @@ Create a Service named nginx of type NodePort to expose pod nginx's port 80 on p
 
 (This will automatically use the pod's labels as selectors, but you cannot specify the node port. You have to generate a definition file and then add the node port in manually before creating the service with the pod.)
 
-
-
 create deployment and scale to 3 replicaset
-
-
-
-
-
-
-
 
 ------------
 
-*docker run -it -p applicationPort:containerPort -v myMountlocation:image-name/location -u root image-name* ; runs in intractive and detached mode with mapping public port and private port and volumn setup for the backup 
+*docker run -it -p applicationPort:containerPort -v myMountlocation:image-name/location -u root image-name* ; runs in intractive and detached mode with mapping public port and private port and volumn setup for the backup
 
 Example : Run an instance of kodekloud/simple-webapp with a tag blue and map port 8080 on the container to 38282 on the host.
 
@@ -173,6 +160,7 @@ $ docker ps
 CONTAINER ID        IMAGE               COMMAND                  CREATED             STATUS              PORTS NAMES
 1e03faef1f76        nginx:alpine        "nginx -g 'daemon of…"   57 seconds ago      Up 56 seconds       0.0.0.0:3456->3456/tcp, 0.0.0.0:38080->80/tcp trusting_elgamal
 ```
+
 ------------
 
 Run a container named blue-app using image kodekloud/simple-webapp and set the environment variable APP_COLOR to blue. Make the application available on port 38282 on the host. The application listens on port 8080.
@@ -184,7 +172,6 @@ Run a container named blue-app using image kodekloud/simple-webapp and set the e
 Deploy a mysql database using the mysql image and name it mysql-db.
 Set the database password to use db_pass123. Lookup the mysql image on Docker Hub and identify the correct environment variable to use for setting the root password.
 
-
 >$ docker run -e MYSQL_ROOT_PASSWORD=db_pass123 --name mysql-db  mysql
 
 ------------
@@ -194,45 +181,37 @@ Run it in detached mode.
 
 > docker run -d ubuntu sleep 1000
 
-
 ------------
 
 # YAML
 
-
-
-
-
 ------------
-
-
 
 # Optimize Docker Files
 
-https://www.youtube.com/watch?v=KLOdisHW8rQ
-https://www.youtube.com/watch?v=T4Df5_cojAs&t=373s
+<https://www.youtube.com/watch?v=KLOdisHW8rQ>
+<https://www.youtube.com/watch?v=T4Df5_cojAs&t=373s>
 
-> Use multi stage builds 
-https://docs.docker.com/develop/develop-images/multistage-build/
+> Use multi stage builds
+<https://docs.docker.com/develop/develop-images/multistage-build/>
 
-> Speed up your build with this optimized Dockerfile  https://www.youtube.com/watch?v=oZ9nyCWERYc
+> Speed up your build with this optimized Dockerfile  <https://www.youtube.com/watch?v=oZ9nyCWERYc>
 
+K8s
 
-
-K8s 
-
-https://www.youtube.com/watch?v=Qzy6nmk0eI8&t=106s
-
+<https://www.youtube.com/watch?v=Qzy6nmk0eI8&t=106s>
 
 # Creating pod using YAML
 
 > K8s uses YAML files as inputs for the creation of PODs, Replica sets, deployment, services , volums etc.
 
 **Best sutiable softwares for Yaml creation**
+
 - IDE : pycharm with k8s plugin
-- Validation : http://www.yamllint.com/ 
+- Validation : <http://www.yamllint.com/>
 
 Structure as follows ( Mandatory fields for every yaml file)
+
 ```yaml
 apiVersion:
 Kind:
@@ -259,7 +238,7 @@ spec:
 
 ```
 
-create redis pod with invalid image 
+create redis pod with invalid image
 
 ```shell
 apiVersion: v1
@@ -275,7 +254,6 @@ spec:
       image: redis123
 ```
 
-
 ```shell
 master $ kubectl apply -f redis.yml
 pod/redis created
@@ -287,7 +265,9 @@ newpods-t7n4r   1/1     Running        0          14m
 newpods-wqhcp   1/1     Running        0          14m
 redis           0/1     ErrImagePull   0          7s
 ```
+
 After correting the image name to **redis**
+
 ```shell
 master $ vi redis.yml
 master $ kubectl apply -f redis.yml
@@ -308,17 +288,14 @@ redis           1/1     Running   0          100s
 
 **Replication Controller**
 
-
-
 K8s Commands :
 
-create pod 
-`kubectl apply -f fileName.yml` 
+create pod
+`kubectl apply -f fileName.yml`
 
 Sample pod defintion yml file
 
 `kubectl run <pod-name> --image <image-name>`
-
 
 Remove pod  `kubectl delete pod <pod-name>`
 
@@ -330,7 +307,7 @@ scale replicaSet `kubectl scale --replicas=6 -f fileName.yml` [this does not eff
 
 replace pod/replicaset file `kubectl replace -f fileName.yml`
 
-replace replicas `kubectl scale --replicas=6 replicaset myapp-replicaset ` [but changes does not reflect in .yml file]
+replace replicas `kubectl scale --replicas=6 replicaset myapp-replicaset` [but changes does not reflect in .yml file]
 
 get replicaSets `kubectl get replicaset`
 
@@ -338,7 +315,7 @@ delete replicaSet `kubectl delete replicaset myapp-replicaset` [also delete unde
 
 update repilcaSet `kubectl edit replicaset replicaSetName` [get replicaSet name using command `kubect get replicaset`]
 
-all about describe 
+all about describe
 `kubectl describe  deployment <deployment-name>`
 `kubectl describe  pod <pod-name>`
 `kubectl describe  replicaset <replicaset-name>`
@@ -393,21 +370,19 @@ NAME                                             DESIRED   CURRENT   READY   AGE
 replicaset.apps/httpd-frontend-5cd44f5b67        3         3         3       108s
 ```
 
-
-
 Node
 
-Kubernetes is configured on one or more Nodes. A node is a machine – physical or virtual – on which kubernetes is installed. A node is a worker machine and this is were containers are hosted. 
+Kubernetes is configured on one or more Nodes. A node is a machine – physical or virtual – on which kubernetes is installed. A node is a worker machine and this is were containers are hosted.
 
-But what if the node on which our application is running fails? Well, obviously our application goes down. So you need to have more than one nodes for **high availability **and **scaling**. 
+But what if the node on which our application is running fails? Well, obviously our application goes down. So you need to have more than one nodes for **high availability**and **scaling**.
 
-A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. 
+A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well.
 
-A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well. 
+A cluster is a set of nodes grouped together. This way even if one node fails you have your application still accessible from the other nodes. Moreover having multiple nodes helps in sharing load as well.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/cluster.PNG)
 
-Now we have a cluster, but who is responsible for managing the cluster? Were is the information about the members of the cluster stored? How are the nodes monitored? When a node fails how do you move the workload of the failed node to another worker node? That’s were the Master comes in. The master is another node with Kubernetes installed in it, and is configured as a Master.   The master watches over the nodes in the cluster and is responsible for the actual orchestration of containers on the worker nodes. 
+Now we have a cluster, but who is responsible for managing the cluster? Were is the information about the members of the cluster stored? How are the nodes monitored? When a node fails how do you move the workload of the failed node to another worker node? That’s were the Master comes in. The master is another node with Kubernetes installed in it, and is configured as a Master.   The master watches over the nodes in the cluster and is responsible for the actual orchestration of containers on the worker nodes.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/MasterNodeAndWorkerNode.PNG)
 
@@ -415,20 +390,17 @@ Now we have a cluster, but who is responsible for managing the cluster? Were is 
 
 ![](https://github.com/praveenambati1233/docker/blob/master/k8sArch.PNG)
 
-
 **Pod**
 
 The containers are encapsulated into a Kubernetes object known as PODs.
 
-
-Each Pod get it's own IP address in k8s 
+Each Pod get it's own IP address in k8s
 
 **Deployment**
 
 It is Kubernetes object that comes higher in the hierarchy, the deployment provides us with the capability to **upgrade** the underlying instances seamlessly using **rolling updates.** **Undo changes** and **pause** and **resume changes** as required.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/deployment.png)
-
 
 When you first create a deployment it triggers a rollout a new rollout creates a new deployment revision.
 
@@ -445,6 +417,7 @@ REVISION  CHANGE-CAUSE
 ```
 
 There are two types of upgrades in deployment stratagy
+
 1. Create ( downtime will be there as we bring down deployment at a time)
 2. Rolling update ( default )
 
@@ -475,10 +448,13 @@ spec:
       # Refer Label from pod template
       app: myapp
 ```
+
 create deployment
+
 ```shell
 kubectl create -f deployments-definition.yml
 ```
+
 JFYI you can also create deployment by using below command
 
 ```
@@ -494,9 +470,9 @@ REVISION  CHANGE-CAUSE
 1         <none>
 ```
 
-Change Request :` image: library/nginx:1.7.1`
+Change Request :`image: library/nginx:1.7.1`
 
-Alternate way to update deplyments 
+Alternate way to update deplyments
 
 `kubectl edit deployment.v1.apps/<deployment-name>`
 
@@ -529,9 +505,9 @@ deployment.extensions/frontend rolled back
 ```
 
 look at the revision 2, 3. Before undo our changes was 1,2.
-Internally 
+Internally
 K8s **records** the revision history with what command we rollout.
-when we undo k8s create new reivions in this case it is 3 and executes the revision 1 rollout. 
+when we undo k8s create new reivions in this case it is 3 and executes the revision 1 rollout.
 Note - You couldn't see CHANGE-CAUSE details because I have used --record when I run the kubectl create command.
 
 ```shell
@@ -556,12 +532,11 @@ deployment "frontend" successfully rolled out
 
 ```
 
-
 # Service
 
 The service is in fact like a virtual server inside the node. Inside the cluster,
 It has its own IP address and that IP address is called the cluster IP of the service.
-A Kubernetes Service that identifies a set of Pods using label selectors. Unless mentioned otherwise, Services are assumed to have virtual IPs only routable within the cluster network. 
+A Kubernetes Service that identifies a set of Pods using label selectors. Unless mentioned otherwise, Services are assumed to have virtual IPs only routable within the cluster network.
 Service has it's own load balancing technique when routes the traffic.
 
 Service can help us by mapping a port on the node to a port on the pod.
@@ -577,7 +552,6 @@ Service can help us by mapping a port on the node to a port on the pod.
 Service listen to a port on the node and forward request on that port to a port on the pod running the web application this type of service is known as a **node port** service. Because the service listens to port on the node and forward requests to the pods.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/serviceNodePort.PNG)
-
 
 ```yaml
 apiVersion: v1
@@ -596,8 +570,6 @@ spec:
       # By default and for convenience, the Kubernetes control plane will allocate a port from a range (default: 30000-32767)
       nodePort: 30080
 ```
-
-
 
 **2. ClusterIp**
 
@@ -625,7 +597,6 @@ To access nginx application we need wget/curl utility so let's download busybox.
 BusyBox is a software suite that provides several Unix utilities in a single executable file.
 
 Access : `wget -O- IP:Port`
-
 
 ```shell
 C:\Users\praveena>kubectl run busybox --rm --image=busybox -it --restart=Never -- sh
@@ -661,28 +632,20 @@ Commercial support is available at
 
 ```
 
-
 And finally let's look at what happens when the pods are distributed across multiple nodes. In this case,
 we have the web application on pods on separate nodes in the cluster.
 When we create a service without us having to do any additional configuration, kubernetes automatically creates a service that spans across all the nodes in the cluster and maps the target port to the same node port on all the nodes in the cluster.
-This way you can access your application using the IP of any node in the cluster and using the same port number which in this case is 30008. As you can see using the IP of any of these nodes.  And I'm trying to curl to the same port and the same port is made available on all the nodes part of the cluster. 
+This way you can access your application using the IP of any node in the cluster and using the same port number which in this case is 30008. As you can see using the IP of any of these nodes.  And I'm trying to curl to the same port and the same port is made available on all the nodes part of the cluster.
 
 To summarize, in any case whether it be a single pod on a single node, multiple pods on a single node or multiple pods on multiple nodes, the service is created exactly the same without you having to do  any additional steps during the service creation. When Pods are removed or added, the service is automatically updated making its highly flexible and adaptive. Once created you won't typically have to make any additional configuration changes.
 
-
  **3. LoadBalancer**
-
-
-
-
-
-
 
 # CMD and ENTRYPOINT in Docker
 
 > CMD : The command line parameters passed will get replaced entirely.
 >ENTRYPOINT : The command line parameters will get appended.
-          EntryPoint is command instruction as in, we can specify the program that will be run when the container starts 
+          EntryPoint is command instruction as in, we can specify the program that will be run when the container starts
 **usecase:**
 
 `$docker run ubuntu --image=ubuntu`
@@ -716,7 +679,7 @@ FROM ubuntu
 CMD ["sleep", "5"]
 ```
 
-`$docker run ubuntu-sleeper `
+`$docker run ubuntu-sleeper`
 
 Currently it is hardcoded to 5 seconds. let's say now you want increase the sleep time. As we learn before, one option is to run the docker run command with the new command appended to it.
 
@@ -729,7 +692,6 @@ But it doesn't look  good. the new version of ubuntu image that we created sound
 so to elimiate the "sleep" command  in the run command, we need to use **ENTRYPOINT** instruction.
 
 ![](https://github.com/praveenambati1233/docker/blob/master/cmdvsentrypoint.PNG)
-
 
 **In Kubernetes,**
 
@@ -761,6 +723,7 @@ ENTRYPOINT ["python", "app.py"]
 
 CMD ["--color", "red"]
 ```
+
 Answer : python appy.py --color red
 
 > Inspect the two files under directory 'webapp-color-2'. What command is run at container startup?Inspect the two files under directory 'webapp-color-2'. What command is run at container startup?
@@ -829,6 +792,7 @@ spec:
     command: ["python", "app.py"]
     args: ["--color", "pink"]
 ```
+
 **Answer** : python app.py --color pink
 **Explanation** :
 CMD instruction the command line parameters passed will get replaced entirely.
@@ -841,8 +805,8 @@ Docker CMD = args: [""] in Kubernetes
 ![](https://github.com/praveenambati1233/docker/blob/master/env.png)
 
 **Ref URLs:**
-https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#add-configmap-data-to-a-volume
-configmap/configmap-multikeys.yaml 
+<https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/#add-configmap-data-to-a-volume>
+configmap/configmap-multikeys.yaml
 
 ```yaml
 apiVersion: v1
@@ -870,15 +834,12 @@ spec:
       - configMapRef:
           name: special-config
   ```
-Overridding the env variable `$ kubectl set env po  webapp-color  APP_COLOR=green --overwrite --dry-run -o yaml > pod.yml`
 
+Overridding the env variable `$ kubectl set env po  webapp-color  APP_COLOR=green --overwrite --dry-run -o yaml > pod.yml`
 
 # Docker Security
 
-
-
-
-# Service Account 
+# Service Account
 
 The concept of service accounts is linked to other security related concepts such as authentication,authorization, role-based access controls etc
 
@@ -895,7 +856,6 @@ The secret token is mounted at location /var/run/secrets/kubernetes.io/service/a
 
 So from inside the pod if you run the ls command to list the contents of the directory you will see the secret monitored as three separate files.
 The one with the actual token is the file named "token".
-
 
 ```shell
 C:\Users\praveena>kubectl exec -it frontend-7c8875466f-cspjg ls /var/run/secrets/kubernetes.io/serviceaccount
@@ -917,7 +877,7 @@ When you look at the pod details now you'll see that the new service account is 
 So remember Kubernetes automatically mount the default service account.
 If you haven't explicitly specified any you may choose not to mount a service account automatically by setting the auto mount service account token field to false in the pod spec section. `automountServiceAccountToken: false`
 
-**Service account creation** 
+**Service account creation**
 
 ```yaml
 apiVersion: v1
@@ -970,15 +930,12 @@ namespace:  7 bytes
 token:      eyJhbGciOiJSUzI1NiIsImtpZCI6Il9fazlVWXhqWXFRanZXOG9Db0IwejE1aFZIYWRGbUs0VTZLSTJoTkU2TE0ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImRhc2hib2FyZC1zYS10b2tlbi1objZzaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJkYXNoYm9hcmQtc2EiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiI1ZjZmMWY4YS05ZDM0LTQ3M2ItOWZmNS1lOGNhNmI5M2JkNjciLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDpkYXNoYm9hcmQtc2EifQ.CfWcW9fPH0NeyXG5uxqu1ornIFw3Nh4VrgZR9cUWZYpKK20RjSW0KMhIlJgQuUZQAM3XZJzqmK50opQ4JxXIZI3LGK1Nd1QIip6lHiFj7stNK5EldGXDjjNy5G8VbELJ5phdTAWyDBZIIyfuMDze2KEEtuNw4gDIZGTn73Bm_5tEr3KvVSJegUrrioMlE-BLn05RFc1MyG5HgZm88FtrOWDx8aenuGzeJsGxachKg__A4h2LvwuuqNa1sq01Ssw04RMrmhJHNI2jwE53wAJfBbSeYN9WIj7LNVO3FP_n3AngeFL9smqUEXZP75iwqN-Ued0ZNQaESyM-i9IvmyLJXg
 ```
 
-
-#Multi-container 
-
-
-
+# Multi-container
 
 # Readness probe
 
 If you look below simple-webapp-2 is up and running but still the user request getting failed. Because simple-webapp-2 takes 80 sec to start the application and will get ready to accept traffic ( boot time )
+
 ```shell
 master $ kubectl get all
 NAME                  READY   STATUS    RESTARTS   AGE
@@ -1000,7 +957,6 @@ Failed
 Failed
 ```
 
-
 program:
 
 ```shell
@@ -1008,10 +964,6 @@ for i in {1..20}; do
    kubectl exec --namespace=kube-public curl -- sh -c 'test=`wget -qO- -T 2  http://webapp-service.default.svc.cluster.local:8080/ready 2>&1` && echo "$test OK" || echo "Failed"';
    echo ""
 ```
-
-
-
-
 
 # Pod Design
 
@@ -1024,7 +976,8 @@ Two types of selecting the objects using selectors
 2. Set-based requirement
 `in,notin and exists`
 
-**Examples:** 
+**Examples:**
+
 ```shell
 #simple way
 $kubectl get po -l env=dev
@@ -1056,8 +1009,6 @@ $ kubectl get po --selector env=prod,bu=finance,tier=frontend'
 
 `$ kubectl get po -L <labelname>`
 
-
-
 ```shell
 master $ kubectl get po -L env
 NAME          READY   STATUS    RESTARTS   AGE     **ENV**
@@ -1072,6 +1023,7 @@ db-1-kbhrc    1/1     Running   0          7m3s    dev
 db-1-rfjc7    1/1     Running   0          2m12s   dev
 db-1-xfb8f    1/1     Running   0          7m3s    dev
 ```
+
 **Add annoattion to the exiting pod**
 
 `kubectl annotate po pod-name myannotation='my description`
@@ -1087,7 +1039,6 @@ db-1-xfb8f    1/1     Running   0          7m3s    dev
 **Delete the label on the pod**
 
 `kubectl label po pod-name label-key -`
-
 
 **Tasks**
 
@@ -1122,8 +1073,7 @@ db-1-nkbpw    1/1   Running   0     47m
 
 ```
 
-
-2.  How many objects are in the prod environment including PODs, ReplicaSets and any other objects?
+2. How many objects are in the prod environment including PODs, ReplicaSets and any other objects?
 
 ```
 root@controlplane:~# k get all --selector env=prod --no-headers | wc -l
@@ -1156,9 +1106,7 @@ spec:
 
 solution : match the tier label with frontend in the template. ( tier: frontend )
 
-
 Rest of the tasks are at `Kubernetes\src\dgkanatsios\poddesign`
-
 
 # PV and PVC
 
@@ -1214,7 +1162,6 @@ master $ k get pv
 NAME     CAPACITY   ACCESS MODES   RECLAIM POLICY   STATUS   CLAIM                 STORAGECLASS   REASON   AGE
 pv-log   100Mi      RWX            Retain           Bound    default/claim-log-1                           6m30s
 ```
-
 
 # logs
 
